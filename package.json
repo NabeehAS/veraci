@@ -1,0 +1,13 @@
+{
+  "name": "veraci",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Evidence-first verification for reproducible CI failures and human-approved fixes.",
+  "type": "module",
+  "packageManager": "npm@11.19.0",
+  "engines": {
+    "node": "24.21.0",
+    "npm": "11.19.0"
+  },
+  "workspaces": []
+}

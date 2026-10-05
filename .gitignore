@@ -1,0 +1,22 @@
+# Dependencies and generated build/test output
+node_modules/
+dist/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# Local configuration, credentials and logs
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.log
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
