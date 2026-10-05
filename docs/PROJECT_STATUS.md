@@ -12,7 +12,9 @@ Target functionality is defined by the master roadmap and invariants.
 **V0.c — Minimal workspace and authoritative documentation**, complete.
 Root lockfile/installation/configuration and staged Git checks passed from supplied
 terminal output on 2026-10-05. V0.a and V0.b are complete. V0.d has not started.
-The initial foundation is ready for its first Git commit.
+The foundation was committed as `4d64a77` and published to `NabeehAS/veraci` on
+`main`. This baseline was inspected in a fresh GitHub clone on 2026-10-05; that
+inspection confirms the published files, not a rerun of the local environment checks.
 
 ## 3. Completed functionality
 
@@ -118,21 +120,13 @@ These are internal checkpoints, not public product versions.
 
 ## 12. Exact verification commands
 
-Run in the repository's Ubuntu/WSL terminal. First-time Git initialization/config:
-
-```bash
-git init -b main
-git config --local core.autocrlf false
-git config --local core.filemode true
-```
-
-First-time root lockfile generation, followed by reproducible installation:
+Run in the repository's Ubuntu/WSL terminal. These commands verify the current
+foundation using the committed lockfile:
 
 ```bash
 nvm use
 node --version
 npm --version
-npm install --package-lock-only
 npm ci
 npm ls --all
 npm config get engine-strict
@@ -143,20 +137,19 @@ npm config get save-exact
 Expected versions: Node v24.21.0, npm 11.19.0. Expected tree: root package `veraci`
 with no dependencies. All three configuration queries should return `true`.
 
-Review the initial files and stage only the known foundation paths:
+Inspect changes and line endings:
 
 ```bash
-git add -- README.md AGENTS.md package.json package-lock.json .nvmrc .npmrc .gitignore .gitattributes .editorconfig docs
+git diff --check
 git diff --cached --check
 git status --short --branch
-git diff --cached --stat
 git ls-files --eol
 ```
 
-No output from `git diff --cached --check` means no whitespace errors were found.
-Text files should show LF in the index and working tree. Review the staged diff
-locally with `git diff --cached` before committing.
+No output from the two diff checks means no whitespace errors were found in the
+checked changes. Text files should show LF in the index and working tree. Review
+the actual diff before staging and committing a bounded change.
 
-Suggested first commit after verified completion:
-`chore: initialize VeraCI workspace and architecture docs`.
-Git author identity, remote setup, commit and push are not performed by the bootstrap.
+Git initialization and initial lockfile generation are completed setup steps, not
+repeatable verification commands. Application build/test commands will be added
+when those capabilities exist; none is available at V0.c.

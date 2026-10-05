@@ -97,9 +97,10 @@ and integration results. Do not install later components just to reserve version
 
 V0.c was checked on the initial, uncommitted `main` working tree. The three npm
 configuration queries returned `true`. The audit reported zero vulnerabilities for
-the root-only graph; this is not an application security assessment. The small
-documentation update recording these results receives a final staged whitespace
-check before the foundation commit.
+the root-only graph; this is not an application security assessment. The resulting
+foundation is recorded in commit `4d64a77`, whose published files were inspected in
+a fresh GitHub clone on 2026-10-05. That inspection is separate from the earlier
+developer-run environment/install checks; it does not claim those checks were rerun.
 
 Update a gate only from its actual output. Record command, version/commit or working
 tree context, date, result and limitations. V0.c has an empty dependency graph, so

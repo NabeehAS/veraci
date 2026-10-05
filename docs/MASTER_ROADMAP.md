@@ -198,7 +198,7 @@ The indexed official Prisma v7 runtime requirements include Node 24. Some versio
 
 ### Primary development environment
 
-Use a **Windows host with WSL2 Ubuntu, VS Code connected to WSL, and Docker Desktop using Linux containers**. Keep the repository in the WSL Linux filesystem, for example `~/projects/<project-name>`, rather than developing primarily under `/mnt/c/...`.
+Use a **Windows host with WSL2 Ubuntu, VS Code connected to WSL, and Docker Desktop using Linux containers**. Keep the repository in the WSL Linux filesystem, for example `~/projects/veraci`, rather than developing primarily under `/mnt/c/...`.
 
 - Run repository Git, Node.js, npm, builds, tests and ordinary development commands inside WSL. Use the VS Code WSL connection so the editor, terminal and extensions operate on that same Linux workspace.
 - Use Docker Desktop's WSL integration for the Ubuntu distribution. Verify Linux-container mode and access from WSL; do not add a second Docker daemon inside WSL without a concrete need.
@@ -377,7 +377,7 @@ There is no end-to-end exactly-once guarantee across PostgreSQL, RabbitMQ, Docke
 
 ### Trusted policy and execution preparation
 
-The working `.evidenceci.yml` is an owner-reviewed configuration proposal, not an instruction channel the PR may rewrite. Store the approved policy version in PostgreSQL, including check IDs, fixed argument arrays, allowed source roots, protected files, runtime image digest, resource limits and dependency-lock hash.
+The planned `.veraci.yml` is an owner-reviewed configuration proposal, not an instruction channel the PR may rewrite. Store the approved policy version in PostgreSQL, including check IDs, fixed argument arrays, allowed source roots, protected files, runtime image digest, resource limits and dependency-lock hash.
 
 Read policy from an approved baseline; changes require owner approval and a new policy version. A PR that changes the approved harness or test configuration requires policy review; do not silently adopt its replacement. Reject unsupported manifests or configuration changes from automatic repair. Resolve revision, paths and policy before dispatch; fetch using a short-lived read token in the trusted controller and remove credentials before constructing the build workspace. The core executes PR head/candidate code, not a simulated merge with the default branch, and does not claim to establish merge-integration correctness.
 
@@ -499,7 +499,7 @@ Initial configurable budgets: one active investigation per failure; approximatel
 
 Start with at most **two source files and 80 changed lines**, one candidate per investigation. Expand only if measured fixture failures justify it. Accept a bounded unified diff, parse it, validate all paths and apply it to a fresh workspace at `H`.
 
-Protect tests, snapshots, reporter/harness files, package manifests and lockfiles, compiler/linter/test configuration, CI workflows, `.evidenceci.yml`, secrets and deployment files. Reject binaries, symlink changes, submodules, path escapes and unsupported rename operations. Recheck protected-file hashes after application. Keep the trusted harness outside the mutable checkout and check tracked-source integrity after execution; checks may write only approved generated outputs and must not silently edit the candidate they purport to validate.
+Protect tests, snapshots, reporter/harness files, package manifests and lockfiles, compiler/linter/test configuration, CI workflows, `.veraci.yml`, secrets and deployment files. Reject binaries, symlink changes, submodules, path escapes and unsupported rename operations. Recheck protected-file hashes after application. Keep the trusted harness outside the mutable checkout and check tracked-source integrity after execution; checks may write only approved generated outputs and must not silently edit the candidate they purport to validate.
 
 The same parser and policy apply to human-submitted diffs. There is no general upload marketplace or arbitrary patch-generation plugin system in the core.
 
@@ -933,4 +933,4 @@ This section is a change ledger, separate from the master plan above. The first 
 | 9 — Implementation discipline | One bounded verified checkpoint at a time; command context, explained failures/conflicts, synchronized docs and commit/push guidance. | Earlier working architecture is preserved and no future infrastructure is implemented prematurely. |
 | 10 — Solo scope | Reaffirmed depth, tests, measurements and explainability over breadth. | The complete core remains finishable without optional specializations or extra public versions. |
 
-**This master plan is accepted and frozen under section 0's change-control rule. No implementation was performed while incorporating these amendments.** When implementation is requested, begin with one bounded **V0** environment/compatibility/foundation checkpoint and maintain the required repository documents as work proceeds.
+**This master plan is accepted and frozen under section 0's change-control rule.** This document preserves the accepted design, research snapshot and amendment history. Follow [PROJECT_STATUS.md](PROJECT_STATUS.md) for the current implementation checkpoint, verified behavior and next bounded task.

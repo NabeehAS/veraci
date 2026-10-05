@@ -24,7 +24,7 @@ Use Ubuntu in WSL2, Windows VS Code connected to WSL and Docker Desktop with Lin
 containers. Keep the repository in the Linux filesystem, for example
 `~/projects/veraci`. Run repository commands in the Ubuntu terminal.
 
-After V0.c has generated and committed the root lockfile:
+Install from the committed root lockfile:
 
 ```bash
 nvm use
