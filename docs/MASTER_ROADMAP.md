@@ -1,26 +1,39 @@
-# VeraCI — Evidence-First CI Verification Platform
+# VeraCI roadmap
 
-## Authoritative flagship project master roadmap
+This document defines the target architecture, supported scope and release gates
+for VeraCI. It is a design specification, not a record of implemented capabilities.
+[Project status](PROJECT_STATUS.md) records progress; [compatibility.md](compatibility.md)
+records selected versions and verification results.
 
-Research snapshot: **21 September 2026**. Status: **accepted master plan; final amendments incorporated**. This is the frozen architectural baseline. Implementation progress is recorded in [PROJECT_STATUS.md](PROJECT_STATUS.md), and actual version selections/results in [compatibility.md](compatibility.md). The final section records the original revision decisions and the user's final amendments.
+Navigation: [change control](#0-design-baseline-and-change-control) ·
+[product](#1-product) · [scope](#2-required-scope-limits-and-success-cases) ·
+[technology](#3-technology-and-compatibility) · [architecture](#4-architecture-and-trust-boundaries) ·
+[releases](#15-version-by-version-delivery-plan) ·
+[optional extensions](#16-optional-specializations-and-evidence-gates) ·
+[repository standards](#17-repository-documentation-and-completion-standard).
 
-Project name accepted by the user on **5 October 2026**: **VeraCI — Evidence-First CI Verification Platform**, repository `veraci`. This repository copy updates the name and implementation-status pointers; the accepted architecture and release ordering are unchanged. The technology/job-market research below remains the historical September 21 snapshot, not a claim that uninstalled packages have passed compatibility preflight.
+## 0. Design baseline and change control
 
-Navigation: [acceptance and change control](#0-acceptance-and-change-control) · [market findings](#2-israeli-job-market-findings-and-their-implications) · [competition](#3-competition-and-a-defensible-product-distinction) · [technology audit](#5-technology-and-compatibility-audit) · [delivery versions](#17-version-by-version-delivery-plan) · [optional specializations](#18-optional-specializations-and-evidence-gates) · [documentation and implementation discipline](#19-repository-documentation-and-completion-standard) · [change ledger](#20-meaningful-changes-from-the-proposed-roadmap-and-why).
+The product identity, core architecture, scope boundaries and ten-release sequence
+are the accepted baseline. Architectural changes require concrete evidence: a
+reproduced compatibility failure, measured limitation, demonstrated security issue
+or a requirement that the design cannot satisfy.
 
-## 0. Acceptance and change control
+Before implementing an architectural change, document the evidence, trade-offs,
+smallest viable alternative and impact on scope, tests and delivery. Record the
+decision in an ADR and synchronize affected documentation. Preserve working
+implementations unless that decision requires a change.
 
-The user has accepted this roadmap with the final amendments incorporated below. Treat its product identity, core architectural decisions, scope boundaries and ten-release progression as frozen. Do not reopen those decisions because another framework is fashionable or a new session suggests a different architecture.
+Exact dependency versions are compatibility preflight candidates. Supported
+patch/minor adjustments within the accepted release lines are recorded in
+[compatibility.md](compatibility.md). Replacing a technology or departing from its
+accepted release line follows the architectural change process.
 
-An architectural change requires concrete implementation evidence: a reproduced compatibility failure, a measured limitation, a demonstrated security problem, or a requirement that cannot be met within the accepted design. Before changing the architecture, stop the affected work and explain the evidence, trade-off, smallest viable alternative and impact on scope, tests and delivery. Record the resulting decision in an ADR and synchronize the roadmap and repository documentation. Do not silently work around the conflict or regenerate working earlier architecture.
+The project is scoped for one developer. Each release prioritizes tested behavior,
+measured results and maintainability. Optional technologies are introduced only
+when their evidence gates are satisfied.
 
-Exact dependency patch/minor selections are **V0 preflight candidates**, not frozen architectural requirements. A supported compatible adjustment within the accepted technology choices can proceed with an explanation and a record in `docs/compatibility.md`; it does not require reopening the master plan. Replacing a chosen technology or departing from its accepted release line because of a real conflict follows the architectural change process above.
-
-The repository documentation established in V0 is authoritative for implementation state and accepted decisions. This roadmap specifies the intended system; `docs/PROJECT_STATUS.md` describes what actually exists and passes today. Documentation remains current as implementation progresses, while architectural decisions remain stable. A planned capability must never be labeled implemented merely because it appears here.
-
-This remains one developer's flagship portfolio project. Prefer depth, tested behavior, measurements and clear explanations over feature count. Listing an optional technology does not make it part of the core or authorize adding it early.
-
-## 1. The decision
+## 1. Product
 
 Build a **GitHub-integrated evidence and verification system for small software changes**, with a bounded agent that investigates reproducible failures and can propose a repair.
 
@@ -28,9 +41,7 @@ The main product is a reviewable verification report: what failed, what was actu
 
 Preserve these separate concepts in the data model, API, UI and decision rules: **observations ≠ hypotheses ≠ generated candidate ≠ verification ≠ authorization**. A model hypothesis cannot become an observed fact, a candidate cannot become a verified change without execution, and passing checks cannot become permission to publish. Implementation must continue to serve the evidence and verification product rather than drift into a general autonomous coding agent.
 
-Keep TypeScript, a modular NestJS backend, React/Next.js, PostgreSQL, Prisma, RabbitMQ, Docker, GitHub Apps, one LangGraph.js workflow, the OpenAI Responses API, tests, observability and AWS. Remove unused infrastructure from the mandatory path. Deliver ten incremental releases, each usable and tested.
-
-Primary employment positioning: **junior software engineer / backend / full-stack engineer with demonstrated reliability and agentic-AI engineering**. Developer tools is the natural product domain. Applied and agentic AI are credible specializations, not a reason to dilute the software engineering or claim senior-level production experience.
+The core uses TypeScript, a modular NestJS backend, React/Next.js, PostgreSQL, Prisma, RabbitMQ, Docker, GitHub Apps, one LangGraph.js workflow, the OpenAI Responses API and AWS. Delivery proceeds through ten usable, tested releases.
 
 ### What the project is responsible for
 
@@ -45,55 +56,9 @@ Primary employment positioning: **junior software engineer / backend / full-stac
 
 This is not a general CI replacement, autonomous coding employee, production incident responder, arbitrary-code hosting service, or open-ended multi-agent platform.
 
-## 2. Israeli job-market findings and their implications
+Reports describe observed checks and their limitations; they are not proofs of correctness, security certifications or signed supply-chain attestations.
 
-### Research method and limits
-
-The sample below consists of employer career pages and employer-hosted application pages accessible on 21 September 2026. It is a purposive sample across the requested role families, not a census. Most pages do not expose a reliable posting date. “Observed in September” therefore does **not** mean “newly posted in September,” and an accessible application page does not guarantee that hiring remains open tomorrow.
-
-The Israel Innovation Authority's 2026 report describes **2025** employment: roughly 400,000 high-tech employees and 2.3% annual growth, with slower recent growth than the earlier decade and a decline in software R&D employment. These are background conditions, not September 2026 junior vacancy counts or evidence that AI caused a particular hiring change. [Israel Innovation Authority employment report](https://innovationisrael.org.il/en/report/part-1-high-tech-employment/)
-
-| Role family and observed example | What the employer actually emphasizes | Consequence for this project |
-|---|---|---|
-| General junior SWE — Lightricks, Haifa | Engineering fundamentals, clean code and participation across design, testing, deployment and maintenance. The page is undated. [Employer page](https://www.lightricks.com/career/junior-software-engineer-haifa) | Show a maintained, deployed system and explain its code. A polished AI demo alone is insufficient. |
-| Graduate backend — ERGO NEXT UpNEXT, Kfar Saba | Server-side Kotlin, testable code, production CI/CD and feature ownership. Academic screening includes an 85 GPA requirement; GitHub contributions and AI-tool exposure are advantages. [Employer posting](https://job-boards.greenhouse.io/nextinsurance66/jobs/7979131003) | Preserve relational modeling, transactions, APIs and delivery. A TypeScript portfolio can demonstrate transferable concepts, but does not replace employer-specific language or academic requirements. |
-| Graduate frontend/full-stack — ERGO NEXT UpNEXT, Kfar Saba | TypeScript, React/Angular, Node.js, API integration, testing and complete feature ownership; personal applications and GitHub work are explicitly relevant. [Employer posting](https://job-boards.greenhouse.io/nextinsurance66/jobs/7979090003) | The proposed TypeScript stack is defensible. Build an actual review workflow, not just an admin template. |
-| Junior full-stack — WeDev, Holon | Modern frontend frameworks, Node.js, SQL/NoSQL familiarity, debugging and independent learning. [Employer posting](https://job-boards.eu.greenhouse.io/wedev/jobs/4871703101) | SQL and frontend/backend integration deserve substantial implementation time. This does not justify adding MongoDB alongside PostgreSQL. |
-| Developer experience — JFrog, Netanya/Tel Aviv | The observed **senior** posting requires 6+ years and emphasizes developer platforms, server-side engineering, cloud/container infrastructure and reliability. [Employer posting](https://join.jfrog.com/job/7510102-senior-software-engineer-developer-experience/) | Developer tools is relevant, but this senior posting is not evidence of junior demand for every listed infrastructure tool. Do not add Kubernetes to imitate it. |
-| Applied AI — Mobileye, Jerusalem, temporary role | The observed role asks for 4+ years, strong Python, production LLM systems and tools supporting engineering workflows. [Employer posting](https://careers.mobileye.com/jobs/applied-ai-engineer-temporary-position/2dcef828-5169-4a8c-8975-6f4cedf183d9) | Production behavior, evaluation and tool integration matter. Python can be a later focused specialization; a second backend is unnecessary. |
-| Agentic AI — Cato Networks, Tel Aviv | The observed role asks for 2–3 years of AI experience, Python, APIs/databases/cloud, and reliable agents with operational safeguards. [Employer posting](https://www.catonetworks.com/careers/careers-post/4863034101/agentic-ai-engineer/) | Demonstrate tool boundaries, approvals, state, monitoring and failure handling. Avoid presenting framework familiarity as production experience. |
-| AI engineering — ERGO NEXT, Kfar Saba | The observed AI engineer role asks for 5+ years of software engineering and end-to-end delivery, with LLM evaluation and retrieval experience relevant. [Employer posting](https://job-boards.greenhouse.io/nextinsurance66/jobs/7993814003) | Evaluation should accompany a strong application, rather than displace it. |
-
-**Inference from this sample:** the strongest portfolio strategy is broad SWE credibility with a demonstrable AI specialization. There are genuine graduate/junior openings, but the dedicated AI and developer-platform examples reviewed here mostly target experienced candidates. This sample does not establish the national proportion of junior AI jobs, a framework popularity ranking, salary expectations or hiring odds.
-
-Practical priorities:
-
-- Spend substantial time on SQL, HTTP semantics, concurrency, debugging, tests and deployment.
-- Keep one primary language and one coherent backend. NestJS is an architectural choice, not a claim that Israeli employers universally require Nest.
-- Present actual measurements and failure demonstrations. Do not substitute a long technology list for evidence.
-- Keep interview preparation in algorithms, language fundamentals and SQL outside this project's scope; the project does not replace it.
-
-## 3. Competition and a defensible product distinction
-
-| Public product | Verified overlap | Positioning consequence |
-|---|---|---|
-| Nx Self-Healing CI | Investigates CI failures, proposes fixes and supports review or automatic application of verified changes. [Nx documentation](https://nx.dev/docs/features/ci-features/self-healing-ci) | “An agent that fixes CI and runs tests” is already an established feature. |
-| CircleCI Chunk / Sidecar | AI repair and validation are central, including running checks in clean execution environments. [Chunk introduction](https://circleci.com/blog/introducing-chunk/), [Sidecar Microbuild](https://circleci.com/blog/sidecar-microbuild-in-five-minutes/) | Independent execution and CI integration alone are not unique claims. |
-| GitHub Copilot cloud agent | Repository investigation, changes, branches and PR-oriented work overlap with the coding-agent portion. [GitHub documentation](https://docs.github.com/copilot/concepts/agents/cloud-agent/about-cloud-agent) | Competing on general coding autonomy would broaden the project and weaken its identity. |
-| NovaOps | Its public IBM catalog listing positions it around agentic ChatOps for DevOps, SRE and cloud operations. [Public listing](https://cloud.ibm.com/catalog/services/novaops) | Keep the domain at pre-merge software verification, not production incident remediation. No claims are made about NovaOps' private implementation. |
-
-The project's distinction is a deliberately narrow combination that can be demonstrated:
-
-1. **Evidence is the primary output.** Every diagnosis links to source excerpts or execution observations. Reports distinguish observations, hypotheses, checks and limitations.
-2. **Verification works independently of patch generation.** A small authenticated API can accept a human-authored diff and route it through the identical policy and verification path.
-3. **Abstention is a useful product result.** Unreproduced, flaky, unsupported and insufficient-evidence cases receive an explanation and evidence, not a speculative “fix.”
-4. **The approved object is exact.** Approval binds a repository, revisions, candidate, execution environment, policy and report. A changed input invalidates approval.
-5. **Reliability is inspectable.** Duplicate delivery, worker death, resumed investigation, stale completion and ambiguous GitHub publication are demonstrated with tests and traces.
-6. **Quality claims have denominators.** Publish a small reproducible benchmark including failures and unsafe-action attempts, not only successful demos.
-
-These are design and portfolio differentiation goals. They are not an assertion that no commercial product provides similar capabilities. Do not market the report as a mathematical proof of correctness, a security certification, or a signed supply-chain attestation.
-
-## 4. Required scope, limits and success cases
+## 2. Required scope, limits and success cases
 
 ### Required core by V9
 
@@ -110,9 +75,9 @@ GitHub App integration; login and tenant authorization; REST/OpenAPI; PostgreSQL
 
 “Curated” limits exposure; it does not make repository text trustworthy or remove the fact that package installation and tests execute code.
 
-### Required demonstration stories
+### Required demonstration scenarios
 
-| Story | What a reviewer should see |
+| Scenario | Required behavior |
 |---|---|
 | Reproducible source bug | A duplicate-user endpoint returns 500 where its test requires 409. The same failure is observed in fresh runs; evidence points to error handling; a small candidate passes required checks; approval publishes a fix PR. |
 | Intermittent failure | The same test passes and fails across recorded attempts, for example 2 failures in 4 executions. The report says “possibly flaky” and abstains from automatic repair. |
@@ -120,40 +85,41 @@ GitHub App integration; login and tenant authorization; REST/OpenAPI; PostgreSQL
 | Recovery and staleness | A worker is killed and replaced. Its late result cannot overwrite the new attempt. A new GitHub revision invalidates the old candidate's publication eligibility. |
 | Generator-independent verification | A developer submits a small incorrect diff through the API. The verifier rejects it using execution evidence without invoking the patch generator. |
 
-The last two are small extensions of core mechanisms, not separate product modules.
+## 3. Technology and compatibility
 
-## 5. Technology and compatibility audit
+Use maintained releases, exact direct dependency pins, a committed root lockfile
+and pinned container images. Resolve package engines, peer dependencies and runtime
+behavior before relying on a version. Do not conceal conflicts with `--force`,
+`--legacy-peer-deps` or unexplained overrides.
 
-The documentation below was checked for this research snapshot. **This is documentary verification, not an executed dependency compatibility test.** No project was installed or compiled. V0 must resolve and record the exact dependency graph and run the integration preflight before application development continues.
-
-Use stable releases, a committed lockfile, reproducible container digests and a dated compatibility record. “Current” below means observed on 21 September 2026. All exact numbers in this research table are starting candidates, not immutable requirements. During V0, resolve compatible supported versions, pin them appropriately and document the reasons for any adjustment. Do not use `--force` or `--legacy-peer-deps` to conceal conflicts, and do not resolve every package to an unqualified `latest` tag.
-
-Retain these choices unless concrete compatibility evidence requires reconsideration: **Node.js 24 LTS; TypeScript 6; NestJS 12; React 19; a supported/patched Next.js 16 line; PostgreSQL 18; maintained stable Prisma 7; RabbitMQ 4.3; and Vitest without a parallel Jest stack**. Prefer a supported compatible patch/minor over blindly preserving the researched number. Architectural departures follow section 0.
+The required release lines are **Node.js 24 LTS, TypeScript 6, NestJS 12, React 19,
+a supported/patched Next.js 16 line, PostgreSQL 18, maintained stable Prisma 7,
+RabbitMQ 4.3 and Vitest without a parallel Jest stack**. Exact selections and
+integration results belong in [compatibility.md](compatibility.md). The references
+below support implementation; they do not establish an executed compatibility gate.
 
 ### Application, persistence and integration
 
-| Technology | Revised baseline and compatibility decision | Official evidence |
+| Technology | Release line and integration requirements | Official reference |
 |---|---|---|
-| Node.js | **24 LTS**, with **24.21.0** observed. Use the maintained 24.x patch available at implementation. Do not switch to the Current line merely because its number is higher. | [Node 24.21.0 release](https://nodejs.org/en/blog/release/v24.21.0) |
+| Node.js | **24 LTS**. Resolve a supported patch and keep runtime, package engines and CI aligned. | [Node 24 release](https://nodejs.org/en/blog/release/v24.21.0) |
 | TypeScript | **6.0 stable line**, strict mode. Use separate server and Next.js compiler configurations; do not force one module configuration across all packages. | [TypeScript 6.0 release](https://devblogs.microsoft.com/typescript/announcing-typescript-6-0/) |
-| NestJS | **12.x**, matching compatible Nest packages. Prefer coherent ESM. Its CLI has stricter Node minimums than some runtime paths; Node 24.21 satisfies the documented 24.15+ CLI requirement. New ESM projects use Vitest. | [Nest migration guide](https://docs.nestjs.com/migration-guide) |
-| React / React DOM | **19.3.0 observed**, with matching React and React DOM versions and compatible type packages. Validate component peers rather than forcing installation. | [React versions](https://react.dev/versions), [Next React guidance](https://nextjs.org/docs/messages/react-version) |
-| Next.js | **16.3.5 observed**, on the active 16.x major line. The original 16.2 baseline should not be frozen: the August security release identifies 16.3.3 as a patched 16.x release. Use the latest patched supported release when starting. | [16.3.5 release](https://github.com/vercel/next.js/releases/tag/v16.3.5), [security release](https://nextjs.org/blog/august-2026-security-release), [support policy](https://nextjs.org/support-policy) |
-| PostgreSQL | **18.6 observed**, a supported stable major/patch combination. Use the same major locally, in integration tests and in the initial self-hosted deployment. Do not adopt PostgreSQL 19 beta. | [PostgreSQL version policy](https://www.postgresql.org/support/versioning/) |
-| Prisma | **Pin the maintained 7.x line explicitly.** Prisma's September 9 statement identifies 8 as a release candidate and promises continued 7 maintenance. Use matching compatible Prisma client/CLI/adapter releases, `prisma-client`, explicit output, `prisma.config.ts`, and the PostgreSQL driver adapter. Do not copy a CommonJS recipe into an ESM project unchanged. | [Prisma release status explanation](https://www.prisma.io/blog/is-prisma-8-ready-for-long-lived-production-apps), [Nest Prisma integration](https://docs.nestjs.com/recipes/prisma) |
+| NestJS | **12.x**, matching compatible Nest packages, coherent ESM and Vitest. Check CLI and runtime Node requirements separately. | [Nest migration guide](https://docs.nestjs.com/migration-guide) |
+| React / React DOM | **19.x**, matching runtime versions and compatible types/component peers. | [React versions](https://react.dev/versions), [Next React guidance](https://nextjs.org/docs/messages/react-version) |
+| Next.js | Supported, patched **16.x** line. Validate React peers and production build/start behavior. | [Next installation](https://nextjs.org/docs/app/getting-started/installation), [support policy](https://nextjs.org/support-policy) |
+| PostgreSQL | **18**, with the same major locally, in integration tests and in the initial deployment. Select a maintained image and record its digest. | [PostgreSQL version policy](https://www.postgresql.org/support/versioning/) |
+| Prisma | Maintained stable **7.x** line. Align CLI, client and driver adapter; use `prisma-client`, explicit output, `prisma.config.ts` and ESM-compatible integration. | [Prisma system requirements](https://www.prisma.io/docs/orm/v7/reference/system-requirements), [Nest Prisma integration](https://docs.nestjs.com/recipes/prisma) |
 | PostgreSQL driver | Use `pg` with `@prisma/adapter-pg`; configure pool bounds, timeouts and verified TLS explicitly. One database, separate application/checkpoint tables, and a total connection budget across processes. | [Prisma PostgreSQL integration recipe](https://docs.nestjs.com/recipes/prisma) |
-| RabbitMQ | **4.3.x**, with **4.3.6 observed**. Use a supported patched image. Community support is time-bounded; schedule an upgrade review rather than assuming 4.x is indefinitely supported. | [RabbitMQ releases/support](https://www.rabbitmq.com/release-information) |
+| RabbitMQ | **4.3.x**, a supported patched image and an upgrade review before its support window ends. | [RabbitMQ releases/support](https://www.rabbitmq.com/release-information) |
 | AMQP client | `amqplib` directly, so publisher confirms, returned messages and manual acknowledgements remain explicit. It is not necessary to turn the backend into Nest microservices. | [amqplib channel API](https://amqp-node.github.io/amqplib/channel_api.html), [RabbitMQ confirms](https://www.rabbitmq.com/docs/confirms) |
 | GitHub integration | One official Octokit package set, a GitHub App and a documented, pinned REST API version. Validate raw webhook signatures; keep installation tokens server-side. | [Octokit](https://github.com/octokit/octokit.js), [webhook validation](https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries) |
 | OpenAPI / Swagger | Nest's supported OpenAPI integration, with package peers matching Nest 12. Use its documented Standard Schema path for Zod inputs and a schema converter where required; verify emitted schemas. Keep HTTP contracts separate from ORM entities. | [Nest OpenAPI](https://docs.nestjs.com/openapi/introduction) |
 
-Prisma does not replace SQL knowledge: use reviewed SQL migrations for constraints and indexes that need it, and parameterized SQL for locking/claim queries when that is clearer. There is no requirement to adopt Prisma 8 during the project; reevaluate after stable release and a migration benefit exists.
-
-The indexed official Prisma v7 runtime requirements include Node 24. Some versioned Prisma documentation pages could not be retrieved in full during this review; the maintained-line decision is supported by Prisma's release statement and Nest's integration recipe. The exact Prisma/driver/PostgreSQL 18 combination remains a mandatory V0 integration gate, not an already-tested claim. [Prisma v7 system requirements](https://www.prisma.io/docs/orm/v7/reference/system-requirements)
+Use reviewed SQL migrations for constraints and indexes that require them, and parameterized SQL for locking/claim queries. The exact Prisma/driver/PostgreSQL combination must pass the V0 database integration gate.
 
 ### UI, agents and tests
 
-| Technology | Revised decision and compatibility detail | Official evidence |
+| Technology | Integration requirements | Official reference |
 |---|---|---|
 | Tailwind CSS | Current **4.x** line; use its Next.js/PostCSS integration rather than copying a v3 setup. | [Tailwind Next.js installation](https://tailwindcss.com/docs/installation/framework-guides/nextjs) |
 | shadcn/ui | Copy only needed accessible primitives into the project; it is not a second application framework. Check React 19 peers and component behavior. | [React 19 guidance](https://ui.shadcn.com/docs/react-19) |
@@ -161,40 +127,30 @@ The indexed official Prisma v7 runtime requirements include Node 24. Some versio
 | Zod | **4.x**, with strict TypeScript. Validate API/config/tool/report boundaries at runtime. Restrict model schemas to the provider's supported JSON Schema subset. | [Zod documentation](https://zod.dev/) |
 | React Hook Form | **Optional**, only when repository settings forms become complex enough to justify it. If introduced, use a resolver release supporting Zod 4. | [Official resolvers](https://github.com/react-hook-form/resolvers) |
 | LangGraph.js | **1.x stable/LTS line**, one bounded workflow with the official PostgreSQL checkpointer. Checkpointer packages have their own versions; validate the combination. | [Release policy](https://docs.langchain.com/oss/javascript/release-policy), [checkpointers](https://docs.langchain.com/oss/javascript/langgraph/checkpointers) |
-| OpenAI SDK / Responses API | Official JavaScript SDK. Use documented function calling and structured outputs through a small provider adapter. Select an available model supporting both capabilities at implementation and record its exact identifier. Do not invent a future model or make product policy depend on its name. | [Function calling](https://developers.openai.com/api/docs/guides/function-calling), [structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs) |
-| Vitest | One unit/integration test runner across server and browser packages, with package-specific configuration. Node 24 satisfies the current runtime floor. Nest tests need its documented SWC/decorator metadata setup; generic frontend transpilation is insufficient for Nest dependency injection. | [Vitest requirements](https://vitest.dev/guide/), [Nest SWC/Vitest recipe](https://docs.nestjs.com/recipes/swc) |
+| OpenAI SDK / Responses API | Official JavaScript SDK. Use documented function calling and structured outputs through a small provider adapter. At V5, select a model supporting both capabilities and record its exact identifier. Product policy remains independent of model selection. | [Function calling](https://developers.openai.com/api/docs/guides/function-calling), [structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs) |
+| Vitest | One unit/integration runner with package-specific configuration. Verify Node engines and Nest SWC/decorator metadata support; frontend transpilation alone is insufficient for Nest dependency injection. | [Vitest requirements](https://vitest.dev/guide/), [Nest SWC/Vitest recipe](https://docs.nestjs.com/recipes/swc) |
 | Supertest | Keep for HTTP contract tests with Vitest; it is test-runner independent. | [Supertest](https://github.com/forwardemail/supertest) |
 | Testcontainers | Keep for real PostgreSQL and RabbitMQ integration tests. Requires a functioning Docker environment, not just Node dependencies. | [Testcontainers for Node.js](https://node.testcontainers.org/) |
 | React Testing Library | Keep for interaction and accessibility-oriented component tests; install its required DOM testing peer. | [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) |
-| Playwright | Keep for browser workflows and server-rendered routes. Current documentation supports Node 24 and Linux/WSL environments; do not promise native Windows 10 support. Match browser binaries to the locked Playwright version. | [Playwright requirements](https://playwright.dev/docs/intro) |
+| Playwright | Browser workflows and server-rendered routes in WSL/Linux. Match Linux browser binaries and system dependencies to the locked Playwright version. | [Playwright requirements](https://playwright.dev/docs/intro) |
 | Next.js test boundary | Test pure functions/client components with Vitest; use browser E2E for async server-component behavior that Vitest does not support. | [Next.js Vitest guide](https://nextjs.org/docs/app/guides/testing/vitest) |
-| ESLint / typescript-eslint / Prettier | One linter plus formatter. The documented typescript-eslint range includes TypeScript 6.0 but not 6.1+. Choose a mutually supported ESLint/plugin set; remove an alternate generated linter instead of maintaining two. | [typescript-eslint compatibility](https://typescript-eslint.io/users/dependency-versions/), [Prettier installation](https://prettier.io/docs/install) |
+| ESLint / typescript-eslint / Prettier | One linter and formatter. Resolve mutually supported TypeScript, ESLint and plugin versions; do not maintain duplicate generated linter configurations. | [typescript-eslint compatibility](https://typescript-eslint.io/users/dependency-versions/), [Prettier installation](https://prettier.io/docs/install) |
 | k6 | One small performance scenario at completion. It is a separate runtime/CLI, not a Node.js application dependency. | [k6 documentation](https://grafana.com/docs/k6/latest/) |
 
 ### Execution, operations and cloud
 
-| Technology | Revised decision and compatibility detail | Official evidence |
+| Technology | Integration requirements | Official reference |
 |---|---|---|
 | Docker / Compose | Maintained Docker Engine and Compose plugin, Linux containers and pinned images. Docker is an execution boundary with important limits, not a promise of hostile multi-tenant isolation. | [Docker security](https://docs.docker.com/engine/security/), [Compose model](https://docs.docker.com/compose/intro/compose-application-model/) |
 | Artifact storage | A small filesystem-backed `ArtifactStore` locally; private S3 in AWS using SDK v3. Run contract tests for both adapters and a real S3 smoke test at deployment. Do not assume a filesystem test proves S3 behavior. | [AWS SDK v3](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/getting-started-nodejs.html), [S3 security](https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html) |
 | Pino | Structured application logs from V0. Redact credentials and sensitive payloads before logging. | [Pino](https://github.com/pinojs/pino) |
-| OpenTelemetry | Server-side traces and metrics, with compatible SDK/exporter versions. Current JS documentation marks traces/metrics stable and logs in development; keep Pino for logs and avoid experimental browser telemetry in the core. Initialize instrumentation before instrumented modules load, including the ESM case. | [OpenTelemetry JS](https://opentelemetry.io/docs/languages/js/), [Node setup](https://opentelemetry.io/docs/languages/js/getting-started/nodejs/) |
+| OpenTelemetry | Server-side traces and metrics with compatible SDK/exporter versions; Pino for logs. Initialize instrumentation before instrumented modules load, including ESM. Browser telemetry is outside the core. | [OpenTelemetry JS](https://opentelemetry.io/docs/languages/js/), [Node setup](https://opentelemetry.io/docs/languages/js/getting-started/nodejs/) |
 | Prometheus / Grafana | A small metrics endpoint and one dashboard. Use compatible maintained releases; keep both private. Rich log aggregation is optional. | [Prometheus](https://prometheus.io/docs/introduction/overview/), [Grafana](https://grafana.com/docs/grafana/latest/) |
 | GitHub Actions | CI plus image deployment. Pin actions to reviewed commit SHAs; use AWS OIDC with restricted repository/environment claims instead of stored AWS access keys. | [Secure Actions usage](https://docs.github.com/en/actions/reference/security/secure-use), [AWS OIDC](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws) |
 | AWS EC2 / ECR / S3 / IAM | Two security-separated hosts when executing repositories in the deployed demo; ECR for images, S3 for artifacts/backups, least-privilege IAM roles. AWS services do not have a single npm-style version to pin; pin images, SDK and deployment configuration. | [ECR](https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html), [EC2 metadata controls](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html), [S3 security](https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html) |
 | Caddy | Maintained Caddy 2 release for HTTPS and reverse proxying. Configure DNS, certificate reachability and SSE behavior. | [Automatic HTTPS](https://caddyserver.com/docs/automatic-https) |
 
-### Original dependencies that leave the mandatory stack
-
-| Original item | Decision |
-|---|---|
-| MinIO | Remove. Its community repository was archived on 25 April 2026 and states that it is no longer maintained. A new core dependency on it is unjustified. Local files plus real S3 are enough for this scope. [MinIO repository](https://github.com/minio/minio) |
-| Redis 8 | Optional only after a measured need for shared caching or distributed rate limits. PostgreSQL stores sessions and durable state; RabbitMQ dispatches work. Do not add a second job system. [Redis Node client](https://redis.io/docs/latest/develop/clients/nodejs/) |
-| pgvector | Optional retrieval experiment after enough historical cases exist and keyword/SQL retrieval has a measured limitation. Keep vectors in PostgreSQL if introduced; verify extension/server compatibility then. [pgvector](https://github.com/pgvector/pgvector) |
-| LangSmith | Optional hosted tracing/evaluation convenience. The core must retain its own traceable runs and eval artifacts, and must work without a LangSmith account. Review source-code retention before enabling it. [LangSmith observability](https://docs.langchain.com/langsmith/observability) |
-| Grafana Loki | Optional when searching container/Pino logs becomes a demonstrated operational problem. Do not add a log platform solely for its dashboard. [Loki documentation](https://grafana.com/docs/loki/latest/) |
-| Jest | Remove the second default test runner; use the supported Vitest path. Jest itself is not declared obsolete or incompatible. |
-| Python/FastAPI service | Replace the default specialization idea with an offline Python evaluation/analysis tool. Add an HTTP service only if a real independent consumer needs it. |
+Optional tools and their adoption criteria are defined in the optional-specializations section. Core artifact storage uses local files and private S3; no separate S3-compatible service is required.
 
 ### Primary development environment
 
@@ -205,7 +161,7 @@ Use a **Windows host with WSL2 Ubuntu, VS Code connected to WSL, and Docker Desk
 - Use Linux workspace paths for Compose bind mounts. Verify file ownership, executable permissions, case sensitivity and a controlled symlink example; use LF line endings for repository scripts. Keep Windows and Linux dependency installations separate, including `node_modules`.
 - Run Playwright with its matching Linux browser binaries/dependencies inside WSL and Linux CI. Do not rely on native Windows browser-test behavior to validate the Linux application.
 - Use argument arrays for child processes and test cancellation, signals and process-tree cleanup on Linux when the runner enters V2. Avoid Windows-specific path, shell and process assumptions in application code.
-- PowerShell remains appropriate for Windows host setup, WSL administration and Docker Desktop administration. Clearly label host-level PowerShell commands separately from WSL commands when giving implementation instructions.
+- PowerShell remains appropriate for Windows host setup, WSL administration and Docker Desktop administration. Document host PowerShell and WSL commands separately.
 
 V0 verifies this environment with small setup checks; it does not implement the V2 runner early. Record the actual Ubuntu, WSL, Docker and tool versions in `docs/compatibility.md`, and use Linux CI/runners to check the remaining differences from the eventual AWS environment.
 
@@ -215,9 +171,9 @@ Before feature work, resolve exact compatible version selections and record Node
 
 The preflight must demonstrate: clean `npm ci`; no forced peer resolution; server production build and startup; Nest provider injection in a test; an OpenAPI schema matching an actually validated endpoint; Prisma generation/migration/query against the chosen PostgreSQL image; Next production build; a React interaction test; and a Linux Playwright smoke test. Use Node ESM/NodeNext conventions in backend packages and Next's supported bundler configuration in the frontend. Define explicit build/test roots where TypeScript 6 requires them.
 
-Verify the WSL workspace location, Linux Docker access/mounts and Linux test environment as part of this preflight. When RabbitMQ enters V2, LangGraph/OpenAI enter V5 and S3/cloud deployment enter V6, extend the record with their actual integration smoke tests. Resolve conflicts transparently using official documentation and installation evidence. If resolution would change an architectural choice, stop and explain before changing it. No roadmap can pre-prove an uninstalled transitive dependency graph.
+Verify the WSL workspace location, Linux Docker access/mounts and Linux test environment as part of this preflight. When RabbitMQ enters V2, LangGraph/OpenAI enter V5 and S3/cloud deployment enter V6, extend the record with their actual integration smoke tests. Resolve conflicts transparently using official documentation and installation evidence. If resolution would change an architectural choice, stop and explain before changing it. Installation and integration results are required to complete each compatibility gate.
 
-## 6. Architecture and trust boundaries
+## 4. Architecture and trust boundaries
 
 Use a **modular monolith** in one repository, with separate process entrypoints for different lifecycles. Shared ownership, shared contracts and one domain database remain intact; process separation is not a microservices program.
 
@@ -262,7 +218,7 @@ Core invariants:
 11. Observations, hypotheses, candidates, verification results and authorization remain distinct objects and decisions.
 12. Ordinary checks, evidence review and supported human-candidate verification do not require a successful model call.
 
-## 7. Relational model, APIs and transactional correctness
+## 5. Relational model, APIs and transactional correctness
 
 ### Domain model
 
@@ -314,7 +270,7 @@ Use `202 Accepted` plus an operation resource for asynchronous actions. Distingu
 
 Avoid building generic CRUD screens for every table. The API and UI should serve the workflow, not expose database internals.
 
-## 8. GitHub, authentication and authorization
+## 6. GitHub, authentication and authorization
 
 ### User sessions and tenants
 
@@ -328,7 +284,7 @@ Use three roles:
 - **DEVELOPER:** investigations, reruns, candidates and ordinary review.
 - **VIEWER:** authorized read-only access.
 
-A solo developer may approve their own demo candidate; record this honestly. Do not imply a four-eyes separation-of-duties guarantee. Test two organizations and every cross-tenant relationship even if the hosted demonstration uses one active organization.
+Self-approval is permitted for the single-developer demonstration; the audit trail must identify the actor. This does not provide a four-eyes separation-of-duties guarantee. Test two organizations and every cross-tenant relationship even if the hosted demonstration uses one active organization.
 
 An installation is linked to an organization only after server-side verification of the installing user's authority and the installation/repository relationship. A user-supplied installation ID is not proof of ownership. Uninstallations and permission revocations disable new work and invalidate pending publication.
 
@@ -346,9 +302,9 @@ Deduplicate both delivery IDs and business events. Reconcile current PR state wh
 
 A passing candidate never turns the original failing revision's CI check green. Its report is a separate result tied to the candidate. Ordinary CI runs on the published candidate revision.
 
-## 9. Reliable dispatch, concurrency and recovery
+## 7. Reliable dispatch, concurrency and recovery
 
-Use two bounded work categories: execution jobs and control/agent jobs. A small retry/dead-letter arrangement is acceptable; do not create a queue for every graph node. A single RabbitMQ node is sufficient for the portfolio and is not highly available.
+Use two bounded work categories: execution jobs and control/agent jobs. A small retry/dead-letter arrangement is acceptable; do not create a queue for every graph node. The core uses a single RabbitMQ node and does not provide broker high availability.
 
 ### Transactional outbox
 
@@ -373,7 +329,7 @@ Reconcile orphaned queued jobs and uncertain external effects; RabbitMQ is not t
 
 There is no end-to-end exactly-once guarantee across PostgreSQL, RabbitMQ, Docker, GitHub and a model provider. The intended guarantee is at-least-once dispatch with constrained, idempotent or reconciled effects and fenced authoritative completion.
 
-## 10. Runner and repository policy
+## 8. Runner and repository policy
 
 ### Trusted policy and execution preparation
 
@@ -408,7 +364,7 @@ Do not trust a repository-produced JSON report without reconciling it with contr
 
 Upload artifacts under server-generated keys with tenant/job ownership and content hashes. Redact secrets before display or model transmission, sanitize terminal controls, render logs as text, and serve untrusted files as safe downloads rather than active HTML. Retention cleanup records which evidence expired.
 
-## 11. Reproduction, classification and evidence reports
+## 9. Reproduction, classification and evidence reports
 
 ### Reproduction protocol
 
@@ -445,7 +401,7 @@ Provide JSON for inspection and Markdown for human review. Finalize an immutable
 
 Use verdicts such as `CHECKS_PASSED`, `CHECKS_FAILED`, `INCONCLUSIVE`, `POLICY_REJECTED` and `STALE`. The UI should say **“These checks passed for this candidate under these conditions”**, not “the code is correct” or “safe to merge.”
 
-## 12. The agent: real tool use, durable state and bounded authority
+## 10. The agent: real tool use, durable state and bounded authority
 
 ### One graph, one provider integration
 
@@ -493,7 +449,7 @@ Use `store: false` when appropriate for Responses, minimize transmitted source/l
 
 Initial configurable budgets: one active investigation per failure; approximately 12 tool calls; at most two supplemental executions; one candidate; bounded model tokens, input bytes and elapsed time; and per-day spend/admission limits. Tune using measurements. Reject new expensive work before the budget is exhausted rather than discovering overspend afterward.
 
-## 13. Candidate generation, independent verification and approval
+## 11. Candidate generation, independent verification and approval
 
 ### Candidate policy
 
@@ -520,7 +476,7 @@ For an eligible candidate:
 
 “Independent” means separate trusted policy and fresh execution from patch generation. It does not require a second model or agent.
 
-For the flagship deterministic fixtures, include a negative control: apply the inverse candidate change or otherwise restore the known failing code under the same harness and show that the relevant test fails again. Negative controls strengthen causal evidence but do not prove that a patch is generally correct. A comprehensive mutation-testing engine is optional.
+For the primary deterministic fixtures, include a negative control: apply the inverse candidate change or otherwise restore the known failing code under the same harness and show that the relevant test fails again. Negative controls strengthen causal evidence but do not prove that a patch is generally correct. A comprehensive mutation-testing engine is optional.
 
 ### Approval identity and freshness
 
@@ -538,7 +494,7 @@ Use a deterministic application-owned branch name, persist a publication intent,
 
 GitHub and PostgreSQL cannot participate in one atomic transaction. A branch may change between the final read and PR creation. Detect and mark that result stale/superseded, avoid claiming its old verification still applies, and require ordinary CI and human review on the current PR. The application never merges.
 
-## 14. Dashboard and live updates
+## 12. Dashboard and live updates
 
 Build six focused views: repository/build list; build execution detail; failure and reproduction evidence; investigation timeline; candidate diff and verification report; and approval/publication history. Repository policy settings can be a small owner-only panel.
 
@@ -550,7 +506,7 @@ For one API instance, in-process fan-out plus bounded database event polling is 
 
 Include loading, empty, partial, failed, expired and stale states; keyboard-accessible review controls; clear time/revision labels; and safe diff/log rendering. A read-only seeded demo can be public; execution and write actions remain authenticated and restricted.
 
-## 15. Testing and measurable agent evaluation
+## 13. Testing and measurable agent evaluation
 
 ### Conventional test strategy
 
@@ -603,7 +559,7 @@ Publish case-level outcomes and small-sample limitations. Zero unsafe executions
 
 Version dataset, source revisions, prompts, tool contracts, policy, model identifier, SDK and environment together. A model change is an evaluated release decision. Keep redacted evaluation outputs available without a commercial observability account.
 
-## 16. Security, observability, cloud and operations
+## 14. Security, observability, cloud and operations
 
 ### Security work is continuous
 
@@ -625,7 +581,7 @@ Provide liveness separately from readiness. Database/broker/provider degradation
 
 ### Deployment
 
-Use one control-plane EC2 host for Caddy, web/API/worker, PostgreSQL and RabbitMQ, and a separate runner EC2 host for the trusted controller and ephemeral builds. This is a cost-conscious portfolio topology with single points of failure, not a production HA claim. Monitoring can be a Compose profile enabled during demonstrations and operations work.
+Use one control-plane EC2 host for Caddy, web/API/worker, PostgreSQL and RabbitMQ, and a separate runner EC2 host for the trusted controller and ephemeral builds. This topology has single points of failure and does not provide high availability. Monitoring can be a Compose profile enabled during demonstrations and operations work.
 
 The runner authenticates to narrow internal endpoints and the necessary dispatch channel; it receives scoped execution instructions and artifact upload capability. Build containers receive neither those credentials nor database/broker access. Keep PostgreSQL, broker management and monitoring off the public internet.
 
@@ -641,13 +597,13 @@ Use one k6 scenario for authenticated build-list/detail reads and a bounded webh
 
 Targets are established after a baseline. Never advertise a throughput number inferred from an empty local database or a mocked execution path.
 
-## 17. Version-by-version delivery plan
+## 15. Version-by-version delivery plan
 
 Every version ends with a tagged, runnable system, a demonstrated workflow, tests for its new risks, updated API/docs and a short known-limitations note. Earlier capabilities continue to work. Unsupported features remain absent or explicitly disabled; they never return simulated production success.
 
 The public roadmap remains exactly **V0–V9**. Internal checkpoints organize work within a release; they are not additional public versions. V4's real execution, failures, reproduction, evidence and classification are the prerequisites for the first agent. Therefore **V5 is the durable read-only investigation agent and initial evaluations; V6 is early cloud deployment and operational proof**. Cloud remains mandatory and must be complete before V7.
 
-Effort estimates below are planning estimates for a developer learning some of this stack, not commitments. Total: approximately **260–404 focused hours**, plus about **25% integration/learning contingency**. At 10–12 hours per week, that is roughly **27–51 weeks**. Re-estimate after V2. If that is too large, stop at a coherent milestone and postpone optional work; do not remove verification/security to preserve a deadline.
+Planning estimates total **260–404 focused hours**, excluding a **25% integration contingency**. Re-estimate after V2 using actual progress. Scope changes must preserve verification and security gates.
 
 | Version | Working outcome | Planning range |
 |---|---|---:|
@@ -662,17 +618,17 @@ Effort estimates below are planning estimates for a developer learning some of t
 | V8 | Exact approval + fix-PR publication | 20–32 h |
 | V9 | Evaluation, operational review and portfolio release | 24–40 h |
 
-The V5/V6 effort ranges move with their work; the total estimate remains **260–404 hours before contingency**. No additional public release or infrastructure is added. V5 proves agent behavior and restart durability locally under WSL/Linux; V6 proves that same behavior on the deployed system, including checkpoint recovery, provider-outage handling, secrets and budgets. Those deployment checks are necessary integration work, now grouped in V6. Re-estimate from actual progress after V2 rather than treating these ranges as fixed commitments.
+V5 proves agent behavior and restart durability in WSL/Linux. V6 verifies that behavior in the deployed system, including checkpoint recovery, provider outages, credentials and budgets. V7 requires both gates.
 
 ### V0 — Reproducible foundation
 
-Establish the WSL2 Ubuntu/VS Code/Docker Desktop Linux environment described in section 5, with the repository in the Linux filesystem. Build the npm-workspace repository, minimal Next web and Nest API, PostgreSQL/Prisma migration, shared boundary schemas, Pino, health endpoints, lint/format/typecheck/test scripts and CI. Create only the packages/processes needed now. Record the threat model outline and supported repository envelope.
+Establish the WSL2 Ubuntu/VS Code/Docker Desktop Linux environment described in section 3, with the repository in the Linux filesystem. Build the npm-workspace repository, minimal Next web and Nest API, PostgreSQL/Prisma migration, shared boundary schemas, Pino, health endpoints, lint/format/typecheck/test scripts and CI. Create only the packages/processes needed now. Record the threat model outline and supported repository envelope.
 
-Establish `docs/ARCHITECTURE_INVARIANTS.md`, `docs/PROJECT_STATUS.md`, `docs/compatibility.md`, `docs/architecture.md` and `docs/adr/` with the responsibilities in section 19. Populate current facts and clearly labeled plans; do not fabricate completed checks or an implemented schema/queue that does not yet exist.
+Establish `docs/ARCHITECTURE_INVARIANTS.md`, `docs/PROJECT_STATUS.md`, `docs/compatibility.md`, `docs/architecture.md` and `docs/adr/` with the responsibilities in section 17. Populate current facts and clearly labeled plans; do not fabricate completed checks or an implemented schema/queue that does not yet exist.
 
 **Working demonstration:** a clean checkout in the WSL Linux filesystem installs, migrates, starts and displays API/database health, with the documented commands also exercised in Linux CI where applicable.
 
-**Acceptance:** the compatibility preflight in section 5 passes; exact V0 pins and the lockfile are committed; any supported version adjustments have recorded reasons; a real API/database integration test and Linux browser smoke pass; production builds start; the five required documentation locations exist and describe current reality. No `--force`, `--legacy-peer-deps`, hidden local prerequisites, fake build results or future-version runtime infrastructure.
+**Acceptance:** the compatibility preflight in section 3 passes; exact V0 pins and the lockfile are committed; any supported version adjustments have recorded reasons; a real API/database integration test and Linux browser smoke pass; production builds start; the five required documentation locations exist and describe current reality. No `--force`, `--legacy-peer-deps`, hidden local prerequisites, fake build results or future-version runtime infrastructure.
 
 ### V1 — GitHub identity, authorization and event intake
 
@@ -720,7 +676,7 @@ Add failure fingerprints, fresh reruns, the classification table, failure capsul
 
 **Acceptance:** observations are retained individually; unrelated failures are not incorrectly conflated; missing evidence cannot pass; reports bind exact source/environment/policy; tests cover all classification branches. Every claim shown as observed has an evidence reference.
 
-This is already a coherent backend/full-stack developer-tool portfolio milestone.
+V4 provides a usable evidence/reproduction workflow without a model provider.
 
 ### V5 — Durable read-only investigation agent + initial evaluations
 
@@ -742,7 +698,7 @@ Prerequisite: completed V5, including its initial eval results and local restart
 
 ### V7 — Candidates + independent verification
 
-Prerequisite: completed V5 agent/eval gates and V6 deployment/operational gates. Add the limited diff proposal, human-diff API, patch policy/parser, fresh candidate workspace, mandatory verification, protected-file/test-count checks, negative controls for flagship fixtures, and candidate/report UI. Candidate creation and its verifier ship together. Human-supplied candidates use that verifier even if the model is unavailable.
+Prerequisite: completed V5 agent/eval gates and V6 deployment/operational gates. Add the limited diff proposal, human-diff API, patch policy/parser, fresh candidate workspace, mandatory verification, protected-file/test-count checks, negative controls for primary fixtures, and candidate/report UI. Candidate creation and its verifier ship together. Human-supplied candidates use that verifier even if the model is unavailable.
 
 **Working demonstration:** one supported bug receives a candidate that passes checks; a plausible wrong human diff fails; a test-disabling proposal is rejected.
 
@@ -758,27 +714,27 @@ Add the approval tuple, expiry, role checks, GitHub freshness reconciliation, pu
 
 ### V9 — Evaluation, operational review and portfolio release
 
-Complete the approximately 26-scenario benchmark and holdout protocol, compare baselines, run selected repeats, review security boundaries, exercise recovery/restore again where changed, and run the small load test. Finish docs, architecture/ER diagrams, demo data, walkthrough video and honest CV material.
+Complete the approximately 26-scenario benchmark and holdout protocol, compare baselines, run selected repeats, review security boundaries, exercise recovery/restore again where changed, and run the small load test. Complete the documentation, architecture/ER diagrams, demo data and walkthrough video.
 
-**Working demonstration:** the five stories in section 4, using the same release and reported limitations.
+**Working demonstration:** the five demonstration scenarios in section 2, using the same release and reported limitations.
 
 **Acceptance:** case-level eval results with denominators and failures; no accepted prohibited actions/tampering in the release suite; no known deterministic false-pass path; measured performance/resource/cost observations; clean setup from README; working hosted read-only demo; source, tests and deployment instructions match the release tag.
 
 V9 is the **complete core**. Historical vector retrieval, a second provider or more infrastructure is not required to call it finished.
 
-## 18. Optional specializations and evidence gates
+## 16. Optional specializations and evidence gates
 
 Choose at most one specialization after the core and only when a measured need or concrete consumer requirement justifies it. Keep Redis, pgvector, LangSmith, Grafana Loki, Terraform, RDS, MCP, a second model provider, a Python/FastAPI service, AST tooling and stronger sandbox/microVM infrastructure optional. The following gates do not override the architectural change process in section 0.
 
 | Specialization | Add only when | Smallest acceptable experiment |
 |---|---|---|
-| Historical retrieval / pgvector | There are enough labeled prior cases and SQL/text retrieval misses useful analogues | Compare text retrieval with embeddings on frozen cases; enforce tenant/repository filtering; measure diagnosis benefit and latency. No separate vector database. |
-| Python for AI roles | Target postings repeatedly require Python and the core is complete | A typed offline evaluation/analysis CLI consuming exported reports and producing reproducible metrics. FastAPI only for an actual HTTP consumer. |
+| Historical retrieval / pgvector | There are enough labeled prior cases and SQL/text retrieval misses useful analogues | Compare text retrieval with embeddings on frozen cases; verify PostgreSQL/extension compatibility, tenant filtering, diagnosis benefit and latency. No separate vector database. |
+| Offline Python evaluation | Completed core evaluation exposes an analysis requirement best served by Python tooling | A typed offline evaluation/analysis CLI consuming exported reports and producing reproducible metrics. FastAPI only for an actual HTTP consumer. |
 | MCP | A real external client needs the existing read-only evidence tools | Expose a few tools through current MCP transport/auth guidance; reuse authorization and limits. Protocol availability does not grant new capabilities. |
 | Second model provider | A measured cost, quality or availability question exists | Implement the existing small adapter and run the same eval cases; do not introduce a second orchestration framework. |
 | AST / TypeScript Compiler API / ts-morph | Text search repeatedly fails on a documented code-navigation case | One symbol/reference tool with an evaluation of usefulness and memory/latency cost. |
-| LangSmith | Trace analysis/eval management consumes enough time to justify hosted tooling | Opt-in redacted traces; core reports and eval results remain portable. |
-| Redis | Multiple API instances need shared rate limits/fan-out, or a measured cache need exists | One explicitly bounded use case; never move authoritative approval/job state into it. |
+| LangSmith | Trace analysis/eval management consumes enough time to justify hosted tooling | Opt-in redacted traces with a source-retention review; core reports/evals remain portable without a LangSmith account. |
+| Redis | Multiple API instances need shared rate limits/fan-out, or a measured cache need exists | One bounded use case; PostgreSQL retains sessions and authoritative approval/job state, and RabbitMQ remains the job dispatcher. |
 | Loki or trace backend | Existing logs/trace exports fail a concrete debugging need | One operational view tied to an incident question; no duplicate telemetry stores by default. |
 | Terraform / RDS | Repeatable infrastructure changes or database operations justify the effort/cost | Codify the already proven deployment or move the same database after a tested migration/restore plan. |
 | Stronger isolation | Supporting external/untrusted contributors becomes a real requirement | A separately scoped threat-model and microVM/sandbox evaluation before accepting such workloads. |
@@ -787,11 +743,11 @@ Choose at most one specialization after the core and only when a measured need o
 
 Also out of scope: billing, enterprise SSO, marketplace publishing, arbitrary language support, production incident remediation, automatic merge, broad code refactoring, self-modifying policies, general-purpose terminals and a custom CI workflow language.
 
-Optional technologies are not frozen to guessed September patch versions: if an option is selected later, its official documentation, support status, authentication model and compatibility receive their own preflight before adoption.
+Optional technologies require their own documentation, support, authentication and compatibility preflight before adoption.
 
-## 19. Repository, documentation and completion standard
+## 17. Repository, documentation and completion standard
 
-Suggested repository organization, introduced incrementally:
+Planned package responsibilities, introduced only when their release needs them:
 
 | Path | Responsibility |
 |---|---|
@@ -840,97 +796,25 @@ As their features arrive, maintain the threat model and repository policy, API/O
 
 ### Implementation discipline
 
-For future AI-assisted sessions, the repository's invariants, status, compatibility record and relevant ADRs are authoritative. Read them and inspect current code/tests before selecting the next task.
+Implement one bounded checkpoint at a time and verify its behavior before advancing.
+Preserve working code; introduce infrastructure only when its release requires it.
+Resolve failing checks or record the blocker, evidence and next diagnostic step.
+Keep commits focused and public release tags separate from internal checkpoints.
 
-- Implement one bounded checkpoint at a time, then verify its meaningful behavior before proceeding.
-- Explain the purpose and expected outcome of commands before asking the user to run them when useful; identify whether each command belongs in WSL or host PowerShell.
-- Preserve working earlier architecture. Do not regenerate it or implement future-version infrastructure early.
-- Resolve failing tests before calling a checkpoint complete. If an issue blocks completion, record and explain the failure, cause/uncertainty and next diagnostic step; never silently skip it or leave it unexplained.
-- Handle compatibility failures transparently. Do not hide them with forced peer resolution or an undocumented workaround.
-- At a good verified Git commit/push checkpoint, tell the user what is ready and suggest a concrete commit message. Keep release tags distinct from the internal work checkpoints.
-- Synchronize architecture/status documentation with the actual code, schema, processes and queues after each meaningful checkpoint. Clearly separate implemented behavior from planned behavior.
-- If a choice conflicts with this master plan, stop the affected architectural change and explain the evidence and trade-off before proceeding, following section 0.
+Update status, architecture and compatibility records with actual changes. Keep
+comments focused on non-obvious decisions or constraints and avoid placeholder
+packages, redundant documentation and abstractions without an existing use case.
+[AGENTS.md](../AGENTS.md) contains concise development-tool guidance. Architectural
+conflicts follow the change-control process in section 0.
 
-The objective is deep, tested, measured and explainable conventional SWE plus genuine production-oriented agentic AI. Feature count is not a completion criterion.
+### Completion criteria
 
-Portfolio completion means a reviewer can:
+The completed core must support:
 
-1. Run the project from a clean checkout and inspect the deployed demonstration.
-2. Follow a failed revision through reproduction, evidence, diagnosis, candidate, checks, approval and PR publication.
-3. See a useful abstention and a blocked malicious instruction.
-4. Inspect SQL constraints, an outbox transaction, a lease/fencing race and a recovery test.
-5. Read real evaluation and performance results, including limitations and failures.
-6. Verify that the source code, CI, deployment and documentation describe the same release.
-
-Interview explanations should cover: why PostgreSQL is authoritative; why RabbitMQ and not Kafka; outbox crash windows; why leases need fencing; why checkpoints do not imply exactly-once effects; how source revisions/approvals become stale; why passing tests do not prove correctness; prompt injection and capability restrictions; Docker's limits; and which measurements justify the design.
-
-The eventual CV description should state what was actually built and measured. Example structure: “Built a GitHub-integrated CI verification platform with PostgreSQL-backed job recovery, isolated execution and a durable tool-using investigation workflow; evaluated it on N scenarios and measured X.” Fill N and X only after execution. Omit optional technologies that were never implemented.
-
-## 20. Meaningful changes from the proposed roadmap, and why
-
-This section is a change ledger, separate from the master plan above. The first table records the original revision decisions, with release references reconciled to the accepted final ordering. The second table records the user's final amendments. Unchanged foundations—evidence first, PostgreSQL authority, human approval, no merge, at-least-once work, protected tests and bounded tools—remain intentional.
-
-| # | Change | Why |
-|---:|---|---|
-| 1 | Made junior SWE/backend/full-stack the primary positioning; AI and developer tools remain specializations | The reviewed junior roles reward end-to-end engineering, while the observed dedicated AI/DevEx roles often require prior experience. This is a sample-based positioning decision, not a market census. |
-| 2 | Added a dated employer-source market table, academic/experience constraints and research limits | Prevents generic or exaggerated job-market claims and explains what the portfolio can and cannot substitute for. |
-| 3 | Compared Nx, CircleCI and GitHub coding agents as well as NovaOps | CI repair plus test execution already exists publicly; comparison only with an SRE product understated the overlap. |
-| 4 | Made the portable evidence/verification report the main product object | Strengthens identity beyond “another coding agent” and makes abstention and non-AI operation useful. |
-| 5 | Added a small human-diff verification API | Demonstrates that evidence and verification are independent of the patch generator, without building a plugin ecosystem. |
-| 6 | Replaced uniqueness claims with specific, demonstrable differentiation goals | Public research cannot prove that no competitor has a feature. |
-| 7 | Narrowed supported repositories, test adapter, package manager, contributor model and repair categories | Makes runner/security/evaluation work achievable for one developer and prevents accidental arbitrary-code SaaS scope. |
-| 8 | Kept Node 24 LTS and TypeScript 6, but added exact-version preflight and separate compiler configurations | A list of majors does not prove interoperability; ESM, peers, decorators and TypeScript configuration must be exercised. |
-| 9 | Updated Next 16.2 to the patched 16.3 line, with 16.3.5 observed, and checked matching React versions | Current official releases and security fixes supersede the original minor-version baseline. |
-| 10 | Made Nest 12's ESM/CLI/testing implications explicit | Old CommonJS/Jest assumptions cannot be copied into the current scaffold without review. |
-| 11 | Explicitly retained Prisma 7 instead of following an unqualified latest tag; added driver/config/pool details | Prisma 8 is an RC in the reviewed September documentation. The stable 7 integration needs deliberate ESM/adapter setup. |
-| 12 | Specified supported PostgreSQL 18 and RabbitMQ 4.3 baselines and an upgrade record | “Supported stable” needs an actual starting decision; broker support windows and database majors matter operationally. |
-| 13 | Unified tests around Vitest, retaining Supertest/Testcontainers/RTL/Playwright | Reduces two-runner maintenance while following Nest's current supported route; documents SWC and async server-component boundaries. |
-| 14 | Removed MinIO from the core | Its community repository is archived/no longer maintained; local files and S3 satisfy the actual storage requirement. |
-| 15 | Moved Redis, pgvector, LangSmith, Loki and React Hook Form behind concrete need gates | Their original mandatory or near-mandatory placement added infrastructure/services without a demonstrated core requirement. |
-| 16 | Replaced the proposed Python/FastAPI service specialization with an offline Python eval tool first | Preserves a route toward Python-heavy AI roles without adding an artificial service boundary. |
-| 17 | Consolidated 19 versions into 10 outcome-based releases | Reduces fragmentation and ensures each release is a usable vertical slice, with an honest effort estimate and stop points. |
-| 18 | Removed a temporary successful build/check stub from the delivery path | A green result must always correspond to actual execution; unsupported functionality stays explicitly unavailable. |
-| 19 | Moved queue/outbox/basic lease correctness into the first execution release | The application should not first establish an execution architecture that must later be replaced to become reliable. |
-| 20 | Kept cloud deployment early and mandatory, with security/evals/observability in their first relevant versions; final ordering places the agent in V5 and cloud in V6 | The accepted amendment introduces useful AI as soon as real evidence exists, while preserving early deployment and continuous quality gates. |
-| 21 | Made the modular-monolith process boundaries and runner trust boundary explicit | Preserves operational separation without introducing microservices, separate data ownership or unnecessary frameworks. |
-| 22 | Reused one execution/check model and added explicit delivery/policy/attempt/effect/event records | Reduces duplicated build/reproduction/verification machinery while giving actual concurrency and audit requirements durable representation. |
-| 23 | Added delivery-level plus business-event deduplication and out-of-order GitHub handling | Unique webhook IDs alone do not prevent duplicate builds from different events or stale state updates. |
-| 24 | Specified outbox claim/publish boundaries, confirms, unroutable messages and ACK timing | Makes queue reliability concrete and avoids confusing stream backpressure with broker acceptance. |
-| 25 | Added fencing generations, guarded completion, orphan reconciliation and supersession | Heartbeats/leases alone do not prevent an old worker from committing after a replacement has taken ownership. |
-| 26 | Separated retryable infrastructure failures from completed failing checks and bounded all retries | Prevents poison loops, misleading reruns and uncontrolled cost. |
-| 27 | Bound execution to owner-approved policy and dependency/harness identities | A PR must not rewrite the commands or policy used to declare itself correct. |
-| 28 | Expanded runner controls and required a separate deployed runner host | Repository scripts execute code; no generic-shell tool does not solve that risk. The separation protects control-plane credentials while keeping hostile public workloads out of scope. |
-| 29 | Distinguished dependency preparation from offline checks and constrained cache reuse | Reproducibility and network isolation otherwise conflict; npm installation is itself an execution/supply-chain boundary. |
-| 30 | Changed “deterministic/flaky” language to observed reproducibility and “possibly flaky,” with recorded sample sizes | Four executions cannot establish statistical determinism or prove the absence of flakiness. |
-| 31 | Added missing-evidence/inconclusive states, test-count checks and safe artifact handling | Prevents fabricated green results, missing reporter output and log/artifact security gaps. |
-| 32 | Made LangGraph checkpoint replay, serialized resume and tool-effect idempotency explicit | Durable graph state is not an exactly-once guarantee for builds, model calls or GitHub mutations; domain/checkpoint reconciliation is still necessary. |
-| 33 | Kept one graph and official provider SDK with a thin adapter | Preserves genuine tool-using AI depth without multiple frameworks or agent-role theater. |
-| 34 | Added schema/refusal/incomplete-output handling, capability enforcement and provider-data limits | Structured outputs constrain syntax, not truth or authorization; prompt text alone is not an injection defense. |
-| 35 | Reduced the default patch budget from five files/200 lines to two files/80 lines | Matches the deliberately narrow first repair domain and makes review/evaluation tractable; expansion requires evidence. |
-| 36 | Shipped candidate generation with its independent verifier and kept mandatory checks outside agent control | Avoids a release that can generate convincing edits without a trustworthy way to assess them. |
-| 37 | Made approval bind an immutable verification payload and full candidate/source/policy/environment identity, with expiry | A generic approve button is insufficient when inputs change; separating mutable lifecycle status also prevents approval from changing its own approved hash. |
-| 38 | Defined fix-PR destination, original-check semantics and ambiguous GitHub-effect reconciliation | Prevents duplicate PRs, accidental inclusion of unrelated feature changes and falsely marking the failing revision green. |
-| 39 | Reduced four roles to three and specified GitHub App login with PKCE, installation verification and tenant authorization | Simplifies UI/policy scope while using the current documented authorization flow and preserving ownership/cross-tenant tests. |
-| 40 | Added durable SSE cursors and a one-instance strategy without Redis | Reconnection correctness is valuable; a second infrastructure dependency is not needed at demo scale. |
-| 41 | Started evals with the first agent and set a roughly 26-scenario completion benchmark instead of a late 30–50-case requirement | Earlier feedback and better-labeled cases offer more value than a larger late dataset; preserves a manageable solo scope. |
-| 42 | Added holdout separation, deterministic/single-call/tool-agent baselines, independent patch checks and precision plus coverage | Makes AI benefit, abstention and false repairs measurable and harder to cherry-pick. |
-| 43 | Separated attempted from executed unsafe actions and required denominators/limitations | A blocked malicious request is different from a successful unsafe operation; zero observed incidents is not a security proof. |
-| 44 | Added production restore/rollback, service degradation and measured performance requirements | Demonstrates operational competence beyond “Docker containers run on a VM.” |
-| 45 | Replaced implied completeness through technology count with observable release gates, scope limits and truthful CV claims | Keeps the project credible, reviewable and finishable. |
-
-### Final accepted amendments
-
-| Amendment | Incorporated change | Consequence |
-|---|---|---|
-| 1 — V5/V6 ordering | V5 is the durable read-only agent plus initial evaluations; V6 is cloud deployment and operational proof. Updated dependencies, acceptance criteria, package timing and effort table. | V5 depends on completed V4, not cloud. V6 deploys and validates the already working agent as well as the evidence system. V7 requires both. Total planning effort is unchanged. |
-| 2 — Development environment | Windows host, WSL2 Ubuntu, VS Code connected to WSL and Docker Desktop Linux containers; repository in the Linux filesystem. | V0 verifies environment/tool paths and Linux test/container behavior; host PowerShell commands remain separately labeled. |
-| 3 — Version candidates | Research snapshot versions are compatible-version starting points; retain the accepted technology/release-line choices unless evidence shows a problem. | V0 resolves/pins its dependencies, commits the lockfile and records reasons/results. No `--force` or `--legacy-peer-deps`; later components are confirmed when introduced. |
-| 4 — Internal V2 checkpoints | Added V2.a domain/check state, V2.b outbox/broker, V2.c runner, V2.d leases/fencing and V2.e integrated failure validation. | Public roadmap remains ten releases. Concurrent/recoverable execution is not released before fencing and the integrated acceptance gate. |
-| 5 — Product identity | Explicitly separate observations, hypotheses, generated candidates, verification and authorization; keep the reviewable report central. | Abstention, model failure/outage, flaky/infra cases and human candidates remain useful product paths. |
-| 6 — Preserved architecture | Marked the accepted decisions and invariants as frozen, with an evidence-based ADR/change process. | No casual framework, service-boundary, queue, authority or agent-capability drift. |
-| 7 — Optional and excluded infrastructure | Retained the optional need gates and the explicit list outside the core. | No résumé-driven infrastructure and no automatic merge/general terminal agent. |
-| 8 — Repository documentation | Required all five documentation locations at V0 and the full twelve-field status record. | Repository documents describe current facts and accepted decisions; README stays a concise public front page. |
-| 9 — Implementation discipline | One bounded verified checkpoint at a time; command context, explained failures/conflicts, synchronized docs and commit/push guidance. | Earlier working architecture is preserved and no future infrastructure is implemented prematurely. |
-| 10 — Solo scope | Reaffirmed depth, tests, measurements and explainability over breadth. | The complete core remains finishable without optional specializations or extra public versions. |
-
-**This master plan is accepted and frozen under section 0's change-control rule.** This document preserves the accepted design, research snapshot and amendment history. Follow [PROJECT_STATUS.md](PROJECT_STATUS.md) for the current implementation checkpoint, verified behavior and next bounded task.
+1. Setup from a clean checkout and a deployed demonstration.
+2. A traceable path from failed revision through reproduction, evidence, diagnosis,
+   candidate verification, approval and PR publication.
+3. Useful abstention and a recorded, blocked prompt-injection attempt.
+4. Inspectable SQL constraints, outbox transactions, lease/fencing races and recovery tests.
+5. Evaluation and performance results with denominators, failures and limitations.
+6. Consistent source, tests, deployment instructions and documentation for the release.

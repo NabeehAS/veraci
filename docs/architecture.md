@@ -1,14 +1,15 @@
 # Architecture
 
-Updated 2026-10-05. Separate **current implementation** from **accepted target design**.
+Updated: 2026-10-06. Current implementation and target design are described separately.
 The [invariants](ARCHITECTURE_INVARIANTS.md) and [master roadmap](MASTER_ROADMAP.md)
 constrain implementation; [project status](PROJECT_STATUS.md) records current progress.
 
-## Current implementation — V0.c
+## Current implementation — foundation
 
 A private npm workspace root with no child packages or dependencies, exact Node/npm
 selections, LF/Git/editor rules and repository documentation. Root module mode is ESM;
-there is no application JavaScript or TypeScript build configuration yet.
+there is no application JavaScript or TypeScript build configuration yet. V0.d
+compatibility preflight is in progress; the committed runtime structure remains unchanged.
 
 Development uses Windows → WSL2 Ubuntu → a Linux filesystem workspace. Windows
 VS Code connects through its WSL extension. Git/Node/npm run in Ubuntu; Docker
@@ -26,10 +27,10 @@ Desktop supplies a Linux engine accessible through WSL integration.
 | CI/CD/cloud deployment | None |
 | Application tests | None |
 
-The development smoke container is not an implemented job runner or application
-service. No application request/data flow exists yet.
+No application request/data flow exists yet. Environment probes do not implement
+a job runner or application service.
 
-## Accepted target design — not yet implemented
+## Target design — not yet implemented
 
 One TypeScript modular NestJS backend codebase owns domain rules and authorization.
 Separate API, worker and runner process entrypoints are introduced only when their

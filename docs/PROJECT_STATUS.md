@@ -1,127 +1,91 @@
 # Project status
 
-Last updated: 2026-10-05. This file describes actual implementation state.
-Target functionality is defined by the master roadmap and invariants.
+Updated: 2026-10-06. This file records implementation progress; the
+[roadmap](MASTER_ROADMAP.md) defines planned functionality. Compatibility evidence
+and its limitations are recorded in [compatibility.md](compatibility.md).
 
 ## 1. Current version
 
-**V0 — Reproducible Foundation**, in progress. No public version has been released.
+**V0 — Reproducible Foundation**, in progress. No public release is tagged.
 
 ## 2. Current internal checkpoint
 
-**V0.c — Minimal workspace and authoritative documentation**, complete.
-Root lockfile/installation/configuration and staged Git checks passed from supplied
-terminal output on 2026-10-05. V0.a and V0.b are complete. V0.d has not started.
-The foundation was committed as `4d64a77` and published to `NabeehAS/veraci` on
-`main`. This baseline was inspected in a fresh GitHub clone on 2026-10-05; that
-inspection confirms the published files, not a rerun of the local environment checks.
+**V0.d — Dependency resolution and minimal API/compiler preflight**, in progress.
+Dependency selection is under review; the API/compiler gate is not complete.
+V0.a–V0.c are complete. The committed implementation remains the V0.c foundation.
 
 ## 3. Completed functionality
 
-Application functionality: none yet.
+No application functionality is implemented yet. The foundation provides:
 
-- Windows/WSL/Ubuntu/tooling inventory completed.
-- Linux Node/npm selection and fresh-shell resolution verified from supplied output.
-- Ubuntu can reach Docker Desktop's Linux engine; Linux Git is available.
-- User confirmed the Linux workspace, VS Code WSL connection and disposable Docker
-  filesystem/basic-signal probe work. The probe's raw output/digest was not supplied.
-- Root npm manifest/pins, Git/editor configuration and authoritative documents exist.
-- The root lockfile was generated with npm 11.19.0 and consumed successfully by `npm ci`.
-  The dependency tree is empty, all three npm settings are enabled, and the 16 staged
-  foundation files pass the whitespace check with LF in both index and working tree.
+- A Linux development environment using WSL2 and Docker Desktop.
+- A private npm workspace root with exact Node/npm pins and one root lockfile.
+- Strict engine/peer settings, exact dependency saves and LF/Git/editor rules.
+- Architecture constraints, release gates and compatibility/status records.
 
 ## 4. Current architecture
 
-One repository with a private npm workspace root and no child workspaces yet.
-The workspace list is intentionally empty until the first real package is introduced.
-There is no application runtime, API, UI, worker, runner or agent implementation.
-See `architecture.md` for the current/target distinction.
+One repository with a private npm workspace root and no child workspaces.
+There are no application entrypoints, routes or UI. See
+[architecture.md](architecture.md) for the current and target designs.
 
 ## 5. Database schema status
 
-No database, Prisma schema, generated client or migrations. PostgreSQL/Prisma
-compatibility work begins in V0.e. No V1 authorization/tenant schema exists.
+No database configuration, Prisma schema, generated client or migrations.
+PostgreSQL/Prisma integration begins in V0.e.
 
 ## 6. Queues/processes currently present
 
-No application queues or persistent application processes. Docker Desktop and the
-VS Code WSL server are development tools. The V0.b container was disposable; its
-temporary probe directory may remain locally pending cleanup.
+No application queues, workers, runners or persistent application processes.
+Docker Desktop and VS Code's WSL server are development tools.
 
 ## 7. Tests that currently pass
 
-Application unit/integration/browser tests: **none implemented or run**.
+Application tests: **none implemented or run**.
 
-Environment checks, 2026-10-05:
-
-- Supplied output verified Node 24.21.0, npm 11.19.0, nvm 0.40.8, Linux executable
-  paths, `linux/x64` and the nvm npm prefix in a fresh Ubuntu session.
-- Supplied output verified Git 2.43.0 and Docker Desktop 4.94.0 with a Linux client
-  and server, Engine 29.8.2 and Compose 5.5.1.
-- User confirmed the remaining V0.b checks passed. This is recorded as user-confirmed,
-  not as directly inspected raw test output or independently reproduced results.
-
-V0.c foundation checks: **passed — supplied output reviewed, 2026-10-05**.
-
-- `nvm use` selected Node 24.21.0 with npm 11.19.0 from `.nvmrc`.
-- `npm install --package-lock-only` and `npm ci` succeeded.
-- `npm ls --all` reported `veraci@0.0.0` with an empty dependency tree.
-- `engine-strict`, `strict-peer-deps` and `save-exact` all returned `true`.
-- `git diff --cached --check` produced no diagnostics.
-- Git status listed the expected 16 new files on an unborn `main` branch.
-- `git ls-files --eol` reported `i/lf` and `w/lf` for every staged file.
-
-The audit reported zero vulnerabilities for the empty root dependency graph. These
-checks establish only this foundation; they do not prove application security or
-compatibility of uninstalled Nest, TypeScript, Prisma or Next dependencies.
+The recorded V0.c checks passed on 2026-10-05: Node/npm selection, lockfile
+generation, `npm ci`, the empty `npm ls --all` tree, all three npm configuration
+checks, staged whitespace validation and LF line endings. These results cover the
+foundation only; they do not establish API, database or browser compatibility.
+Evidence details and remaining gates are in [compatibility.md](compatibility.md).
 
 ## 8. Known bugs
 
-No remaining environment bug has been reported. No application exists to evaluate
-for application bugs. The earlier Windows-npm resolution issue is resolved.
+No open foundation defect is recorded. Application behavior is not yet available
+for assessment.
 
 ## 9. Known technical debt
 
-No intentional code debt introduced. Evidence limitation: the final V0.b probe's
-transcript/image digest was not retained here. Pending V0 implementation is planned
-work, not completed functionality or automatically classified as technical debt.
+No intentional code debt. The initial Docker filesystem/signal probe lacks a
+retained transcript and image digest; it is a reported check, not reproducible
+runner evidence. Unimplemented release scope remains planned work.
 
 ## 10. Known security limitations
 
-No application authorization, secret handling, execution isolation or public service
-exists yet. Local Docker access is a development capability, not a hostile-code
-sandbox. No claim about future runner isolation follows from the environment probe.
-Ignore patterns reduce accidental secret commits but are not a complete secret scan.
+Application authorization, secret handling and execution isolation are not yet
+implemented. Local Docker access does not provide a hostile-code sandbox. Ignore
+patterns help prevent accidental secret commits but do not replace secret scanning.
 
 ## 11. Next bounded task
 
-**V0.d — Dependency resolution and minimal API/compiler preflight**, not started.
-Begin by checking official engine/peer requirements for the minimal server toolchain
-and resolving its exact compatible versions. Introduce only the minimal API/compiler
-foundation needed for this checkpoint; PostgreSQL/Prisma remains V0.e and the web
-package remains V0.f. V1 and all later-version infrastructure remain unopened.
+Complete V0.d dependency resolution and record exact versions and results before
+adding the minimal API/compiler foundation. Verify build/startup, Nest dependency
+injection under Vitest, runtime validation/OpenAPI agreement and structured logging.
+PostgreSQL remains V0.e; the web package remains V0.f.
 
-Planned internal V0 sequence:
-
-| Checkpoint | Scope |
-|---|---|
-| V0.a | Host/existing-work inventory — complete |
-| V0.b | Linux development environment — complete |
-| V0.c | Minimal workspace/docs — complete |
-| V0.d | Dependency resolution and minimal API/compiler preflight |
-| V0.e | PostgreSQL/Prisma integration preflight |
-| V0.f | Web/browser preflight |
-| V0.g | Clean-checkout Linux CI and V0 acceptance |
-
-Planned V2 tracking, to activate only when V2 begins: V2.a Build/Job/Attempt and
-GitHub Check state; V2.b transactional outbox/RabbitMQ; V2.c Docker runner;
-V2.d leasing/fencing; V2.e crash/recovery/duplicate-delivery validation.
-These are internal checkpoints, not public product versions.
+| Checkpoint | Scope | Status |
+|---|---|---|
+| V0.a | Host and tooling inventory | Complete |
+| V0.b | Linux development environment | Complete |
+| V0.c | Minimal workspace and documentation | Complete |
+| V0.d | Dependency resolution and API/compiler preflight | In progress |
+| V0.e | PostgreSQL/Prisma integration preflight | Planned |
+| V0.f | Web/browser preflight | Planned |
+| V0.g | Clean-checkout Linux CI and V0 acceptance | Planned |
 
 ## 12. Exact verification commands
 
-Run in the repository's Ubuntu/WSL terminal. These commands verify the current
-foundation using the committed lockfile:
+Run from the repository root in Ubuntu/WSL to verify the committed foundation:
 
 ```bash
 nvm use
@@ -132,24 +96,12 @@ npm ls --all
 npm config get engine-strict
 npm config get strict-peer-deps
 npm config get save-exact
-```
-
-Expected versions: Node v24.21.0, npm 11.19.0. Expected tree: root package `veraci`
-with no dependencies. All three configuration queries should return `true`.
-
-Inspect changes and line endings:
-
-```bash
 git diff --check
 git diff --cached --check
 git status --short --branch
 git ls-files --eol
 ```
 
-No output from the two diff checks means no whitespace errors were found in the
-checked changes. Text files should show LF in the index and working tree. Review
-the actual diff before staging and committing a bounded change.
-
-Git initialization and initial lockfile generation are completed setup steps, not
-repeatable verification commands. Application build/test commands will be added
-when those capabilities exist; none is available at V0.c.
+Expected: Node v24.21.0, npm 11.19.0, an empty root dependency tree and `true` for
+all three npm settings. Diff checks should report no whitespace errors; tracked
+text should use LF. Build/test commands will be added with the application packages.

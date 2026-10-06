@@ -1,46 +1,48 @@
-# ADR 0001 — Preserve the accepted product and architectural baseline
+# ADR 0001 — Evidence-first product and architecture
 
-Status: **Accepted**. Recorded: 2026-10-05 from the user's accepted master plan and
-final amendments. Implementation status is tracked separately in PROJECT_STATUS.md.
+Status: **Accepted**. Date: 2026-10-05.
 
 ## Context
 
-VeraCI is one developer's flagship portfolio project. It must demonstrate conventional
-software engineering and genuine agentic-AI engineering while remaining achievable.
-A broad autonomous coding product or framework inventory would weaken that goal.
+CI failures can arise from source defects, intermittent tests or infrastructure.
+A plausible diagnosis or generated patch does not establish correctness. The
+system needs reviewable execution evidence and explicit publication authorization,
+with a scope maintainable by one developer.
 
 ## Decision
 
-The reviewable verification report is the primary product. Preserve the separation
-of observations, hypotheses, candidates, verification and authorization; ensure useful
-behavior without successful model output and with human-supplied candidate diffs.
+The verification report is the primary product. Observations, hypotheses,
+candidates, verification and authorization remain distinct. Reports and supported
+human-candidate verification must remain useful without successful model output.
 
-Use the accepted TypeScript modular NestJS/Next.js architecture, PostgreSQL/Prisma,
-RabbitMQ/direct AMQP/outbox, Docker execution boundaries and GitHub App integration.
-Introduce one LangGraph.js workflow with a thin OpenAI adapter, durable state, bounded
-tools, structured outputs, abstention and evaluations. Require independent verification,
-exact human approval for publication and no automatic merge.
+Use a TypeScript modular NestJS backend, Next.js/React UI, PostgreSQL/Prisma,
+RabbitMQ with direct AMQP and a transactional outbox, Docker execution boundaries
+and GitHub App integration. Introduce one durable LangGraph.js workflow with a thin
+OpenAI adapter, bounded tools, structured outputs, abstention and evaluations.
+Require independent deterministic verification and exact human approval before
+publication. Do not merge automatically.
 
-Follow the ten releases in MASTER_ROADMAP.md: V5 is the first read-only agent/evaluation
-milestone after V4 evidence/reproduction; V6 remains mandatory cloud/operational proof.
-Optional infrastructure requires evidence of need. The invariants list all retained
-decisions and excluded/optional technologies.
+Deliver the ten releases in the [roadmap](../MASTER_ROADMAP.md). V5 introduces the
+read-only investigation agent after V4's evidence/reproduction foundation; V6
+deploys and operates that system in AWS before candidate generation in V7.
+The [invariants](../ARCHITECTURE_INVARIANTS.md) define required boundaries and
+the evidence gates for optional infrastructure.
 
 ## Alternatives and consequences
 
-A general terminal agent, automatic merge, multiple autonomous agents and a domain
-microservice architecture are outside the accepted core. Adding infrastructure for
-résumé keywords is rejected. The chosen scope concentrates effort on reliability,
-evidence, authorization, operational behavior and measurable limitations.
+A general terminal agent would expand both execution authority and supported
+tasks. Multiple autonomous agents or services per domain would add coordination
+and operational complexity without a core requirement. These alternatives are
+excluded from the initial scope.
 
-Framework presence does not prove a capability. Each version must finish as a
-working, tested system. Current implementation may be much smaller than the target.
+The selected design concentrates on bounded repairs, recoverable execution and
+inspectable evidence. It requires explicit handling of uncertainty, stale inputs,
+duplicate delivery and external effects. Each release must be runnable and tested;
+its planned architecture does not imply that all capabilities are implemented.
 
 ## Change control
 
-Concrete implementation evidence can justify reconsideration. Stop the affected
-architectural change and explain the evidence, trade-off, smallest alternative and
-scope/test/delivery impact before changing the decision. Record the outcome in a new
-or superseding ADR and synchronize invariants, architecture, compatibility and status.
-Supported patch/minor resolution is recorded in compatibility.md and does not itself
-reopen the architectural baseline.
+Architectural changes require concrete implementation evidence, evaluated
+alternatives and a recorded decision before implementation. A superseding ADR must
+state consequences and synchronize the affected architecture and status documents.
+Supported patch/minor adjustments are recorded in [compatibility.md](../compatibility.md).

@@ -1,9 +1,8 @@
 # Architecture invariants
 
-Status: accepted master decisions, recorded for implementation on 2026-10-05.
-The full specification is [MASTER_ROADMAP.md](MASTER_ROADMAP.md).
-These are constraints on development; their presence does not mean the relevant
-capability is implemented. [PROJECT_STATUS.md](PROJECT_STATUS.md) records reality.
+These constraints govern implementation; they do not imply that a capability is
+already built. The [roadmap](MASTER_ROADMAP.md) defines the target system, and
+[project status](PROJECT_STATUS.md) records the current implementation.
 
 ## Product identity
 
@@ -134,14 +133,15 @@ and stronger sandbox/microVM infrastructure. Record the need and trade-off first
 Outside the core unless requirements fundamentally change: Kafka, Kubernetes,
 Temporal, multiple agent frameworks, multiple autonomous agents, a separate vector
 database, microservice-per-domain architecture, automatic merge and a general-purpose
-terminal agent. Do not reintroduce MinIO or other removed infrastructure by habit.
+terminal agent. Core artifact storage uses local files and private S3; a separate
+S3-compatible storage service is not required.
 
 ## Compatibility and change control
 
 Retain Node 24 LTS, TypeScript 6, NestJS 12, React 19, a supported/patched Next.js 16
 line, PostgreSQL 18, a maintained stable Prisma 7 line, RabbitMQ 4.3 and Vitest unless
-concrete evidence requires reconsideration. Exact versions from the September research
-are candidates. Resolve and pin actual compatible versions as each component is
+concrete evidence requires reconsideration. Exact versions are compatibility
+preflight candidates. Resolve and pin supported versions as each component is
 introduced; commit the lockfile and record results in `compatibility.md`.
 
 Never conceal a conflict with `--force`, `--legacy-peer-deps` or an unexplained
