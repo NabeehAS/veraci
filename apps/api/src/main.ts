@@ -1,12 +1,11 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
+import { readConfig } from './config.js';
+import { configureApp } from './configure-app.js';
 
-const port = Number(process.env.PORT ?? 3001);
-if (!Number.isInteger(port) || port < 1 || port > 65535) {
-  throw new Error('PORT must be an integer between 1 and 65535.');
-}
-
-const app = await NestFactory.create(AppModule);
+const config = readConfig();
+const app = await NestFactory.create(AppModule.register(config), { bufferLogs: true });
+configureApp(app);
 app.enableShutdownHooks();
-await app.listen(port, '127.0.0.1');
+await app.listen(config.port, '127.0.0.1');

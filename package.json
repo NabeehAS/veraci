@@ -20,6 +20,7 @@
     "start:api": "npm run start --workspace=@veraci/api"
   },
   "allowScripts": {
-    "@swc/core": false
+    "@swc/core": false,
+    "@scarf/scarf": false
   }
 }

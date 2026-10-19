@@ -1,6 +1,6 @@
 # Compatibility and version record
 
-Updated: 2026-10-06. Exact versions are selected through compatibility preflight
+Updated: 2026-10-07. Exact versions are selected through compatibility preflight
 within the release lines defined by the [invariants](ARCHITECTURE_INVARIANTS.md).
 An installed package is not considered integrated until its required checks pass.
 
@@ -100,8 +100,45 @@ that dated result is not a general security assessment.
   with this policy. Do not omit optional packages; unsupported native platforms
   require their own compatibility review.
 
-Remaining V0.d gates are Pino logging, runtime validation/OpenAPI and lint/format
-checks. No later-release infrastructure is installed for this preflight.
+## Configuration, logging and contract preflight — 2026-10-07
+
+Test environment: Ubuntu 24.04.3, Linux x86_64, Node 24.21.0 and npm 11.19.0.
+The configuration/logging/contract working tree extends the API/compiler checkpoint.
+
+| Added direct dependencies | Version |
+|---|---|
+| `@nestjs/swagger` | 12.0.2 |
+| `zod` | 4.6.5 |
+| `nestjs-pino` | 5.3.1 |
+| `pino` | 10.4.0 |
+| `pino-http` | 11.0.0 |
+
+Registry metadata and installed declarations confirmed compatibility with the pinned
+Nest 12/TypeScript 6/Node 24 stack. Normal strict installation and fresh `npm ci`
+succeeded. `npm ls --all` reported no dependency-tree problems; `npm run check`
+passed typechecking, 20 tests and the production build. A compiled-process smoke
+passed liveness, OpenAPI, request-log correlation, SIGTERM/port closure, and invalid
+configuration rejection. `npm audit` reported zero known vulnerabilities on this
+date. These are Linux API results, not database/browser/deployment evidence.
+
+Zod's native Standard JSON Schema support supplies Swagger's response contract;
+no converter package or duplicated DTO schema is required. The health controller
+validates the same schema at runtime and returns a generic 500 on invalid output.
+The endpoint has no domain request payload; input validation currently covers
+startup settings. Request schemas are added with data-accepting endpoints.
+
+Pino request serializers allowlist IDs/method/status and omit URLs, headers and
+bodies. Tests exercise secret-like values in those fields and server-generated
+request IDs. This policy does not automatically sanitize free-form application log
+messages. The raw Swagger document route bypasses Nest's request logging middleware.
+
+Swagger introduces the transitive `@scarf/scarf@1.4.0` installation-analytics script.
+It was inspected and explicitly denied in root `allowScripts`; it is unnecessary
+for runtime behavior. Fresh installation and tests pass with both this script and
+SWC's fallback installer disabled. `npm install-scripts ls` reports no unreviewed
+scripts. No blanket install-script approval or dependency conflict override was used.
+
+Lint/format checks remain within V0.d. No later-release infrastructure is installed.
 
 ## Components requiring preflight
 
@@ -109,8 +146,8 @@ checks. No later-release infrastructure is installed for this preflight.
 |---|---|---|
 | TypeScript | 6; strict, package-specific compiler settings | API/compiler preflight passed; see exact selections above |
 | NestJS | 12 with compatible companion packages | Production startup and real Vitest dependency injection passed |
-| Vitest | One compatible maintained line; no parallel Jest stack | Three SWC-backed tests passed |
-| Validation/OpenAPI/Pino | Zod runtime contracts, compatible Nest integration | V0.d: schema agreement, invalid-input handling and safe logs |
+| Vitest | One compatible maintained line; no parallel Jest stack | 20 SWC-backed tests passed |
+| Validation/OpenAPI/Pino | Zod runtime contracts, compatible Nest integration | Configuration, response/OpenAPI agreement and request-log checks passed |
 | PostgreSQL | 18 | V0.e: maintained image tag/digest and real integration |
 | Prisma | Maintained stable 7 line | V0.e: aligned CLI/client/adapter/driver and database checks |
 | Next.js | Supported, patched 16 line | V0.f: package peers and production build/start |
@@ -134,7 +171,7 @@ infrastructure is not installed during V0 to reserve versions.
 | Root lockfile and installation | Passed — Linux preflight, 2026-10-06 | `npm ci` installs the locked API workspace graph; no dependency-tree problems |
 | Git/editor foundation | Passed — recorded output | Staged whitespace check; LF in index and working tree for all 16 foundation files |
 | Dependency graph and API/compiler | Passed — Linux preflight, 2026-10-06 | Normal install/`npm ci`, typechecks, three tests, production build/start and shutdown |
-| API contract/logging | Pending — V0.d | Runtime validation agrees with OpenAPI; invalid input rejected; safe Pino logs |
+| API contract/logging | Passed — Linux preflight, 2026-10-07 | Runtime response/OpenAPI agreement; invalid settings/output rejected; request-log privacy/correlation |
 | PostgreSQL/Prisma | Pending — V0.e | Generate, migrate, query and transaction rollback in an isolated real database; distinct liveness/readiness |
 | UI/browser | Pending — V0.f | Next build/start, React interaction and Linux Playwright against real API/database state |
 | Clean checkout/Linux CI | Pending — V0.g | Lockfile install, lint/typecheck/tests/build/startup from a clean checkout |
@@ -160,6 +197,9 @@ changes follow the [change-control process](ARCHITECTURE_INVARIANTS.md#compatibi
 
 - [Nest 12 migration and ESM requirements](https://docs.nestjs.com/migration-guide)
 - [Nest Vitest/SWC integration](https://docs.nestjs.com/recipes/swc)
+- [Nest Swagger and Standard Schema support](https://docs.nestjs.com/openapi/introduction)
+- [Nest Pino compatibility and setup](https://github.com/iamolegga/nestjs-pino)
+- [Pino HTTP request serializers and IDs](https://github.com/pinojs/pino-http)
 - [TypeScript declaration-checking trade-off](https://www.typescriptlang.org/tsconfig/skipLibCheck.html)
 - [npm dependency install-script policy](https://docs.npmjs.com/cli/v11/commands/npm-install-scripts/)
 

@@ -1,6 +1,6 @@
 # Architecture
 
-Updated: 2026-10-06. Current implementation and target design are described separately.
+Updated: 2026-10-07. Current implementation and target design are described separately.
 The [invariants](ARCHITECTURE_INVARIANTS.md) and [master roadmap](MASTER_ROADMAP.md)
 constrain implementation; [project status](PROJECT_STATUS.md) records current progress.
 
@@ -14,9 +14,16 @@ TypeScript emits Node ESM into `apps/api/dist` using NodeNext resolution and `.j
 relative imports. Vitest uses SWC to preserve Nest's decorator metadata. The HTTP
 integration tests exercise real provider injection and reject a missing provider.
 
-The entrypoint validates `PORT`, binds to loopback (default port 3001) and enables
-Nest shutdown hooks. Logging currently uses Nest's default logger. Pino and runtime
-API validation/OpenAPI remain within the unfinished V0.d scope.
+The entrypoint validates `PORT` and `LOG_LEVEL` with Zod before creating the app,
+binds to loopback (default port 3001) and enables Nest shutdown hooks. The root
+module configures Pino once. Health requests receive server-generated UUIDs; request
+logs retain method, ID, status and duration, omitting URLs, headers and bodies.
+
+The health controller validates its response with one Zod schema; Nest Swagger
+converts that same schema to OpenAPI. An invalid provider response returns a generic
+500 without exposing validation input. `/openapi.json` serves the generated contract
+without a Swagger UI. It is a bootstrap documentation route, outside Nest's request
+logging middleware. Request-body validation will accompany data-accepting endpoints.
 
 Development uses WSL2 Ubuntu, a Linux filesystem workspace, Windows VS Code connected
 through WSL and Docker Desktop's Linux engine. Git, Node, npm and tests run in Linux.
@@ -24,15 +31,15 @@ through WSL and Docker Desktop's Linux engine. Git, Node, npm and tests run in L
 | Area | Current state |
 |---|---|
 | Application entrypoints | `apps/api/src/main.ts` |
-| API routes | `GET /health/live` |
-| OpenAPI/runtime request schemas | Pending V0.d |
+| API routes | `GET /health/live`; documentation at `GET /openapi.json` |
+| Runtime schemas | Zod configuration and liveness response; domain request schemas not yet needed |
 | Web UI | None |
 | Database/schema/migrations | None |
 | Queues/outbox | None |
 | Agent/model provider | None |
 | Project Docker/Compose configuration | None |
 | CI/CD/cloud deployment | None |
-| Application tests | HTTP liveness, absent readiness route and missing-provider rejection |
+| Application tests | Configuration, HTTP liveness, OpenAPI constraints, invalid responses, log privacy/correlation and provider injection |
 
 ## Target design — not yet implemented
 
@@ -61,7 +68,7 @@ human approval and idempotent fix-PR publication arrive in V8. No automatic merg
 
 | Checkpoint | Bounded addition |
 |---|---|
-| V0.d | Complete structured logging, runtime API validation/OpenAPI and lint/format checks |
+| V0.d | Add lint/format checks and complete the API foundation acceptance review |
 | V0.e | PostgreSQL-only Compose setup and Prisma migration/query/transaction preflight |
 | V0.f | Minimal Next/React review shell and actual API/browser integration; shared contracts only at use |
 | V0.g | Clean-checkout Linux CI and aggregate V0 acceptance |
