@@ -15,7 +15,7 @@ relative imports. Vitest uses SWC to preserve Nest's decorator metadata. The HTT
 integration tests exercise real provider injection and reject a missing provider.
 
 Root-owned ESLint uses the existing API test compiler configuration for type-aware
-source/test/tooling checks. Prettier formats JavaScript, TypeScript and JSON, while
+source/test/tooling checks. Prettier formats JavaScript, TypeScript, JSON and YAML, while
 npm owns the generated lockfile format. The aggregate `check` command runs lint,
 format checking, typechecking, tests and build. Source and configuration remain
 unchanged; compilation writes ignored `apps/api/dist` output.
@@ -31,6 +31,14 @@ converts that same schema to OpenAPI. An invalid provider response returns a gen
 without a Swagger UI. It is a bootstrap documentation route, outside Nest's request
 logging middleware. Request-body validation will accompany data-accepting endpoints.
 
+The PostgreSQL-only Compose definition pins an official PostgreSQL 18.6 Bookworm
+image by OCI index digest, mounts a named volume at `/var/lib/postgresql` and
+publishes only `127.0.0.1:5432`. Initialization requests SCRAM for local and host
+connections. `.env.example` declares the required variables; real local credentials
+belong in ignored `.env`. The image initializes a development superuser/database.
+The API is not connected to PostgreSQL yet. Container execution and persistence
+checks remain pending; `pg_isready` alone is not an authentication test.
+
 Development uses WSL2 Ubuntu, a Linux filesystem workspace, Windows VS Code connected
 through WSL and Docker Desktop's Linux engine. Git, Node, npm and tests run in Linux.
 
@@ -40,10 +48,10 @@ through WSL and Docker Desktop's Linux engine. Git, Node, npm and tests run in L
 | API routes | `GET /health/live`; documentation at `GET /openapi.json` |
 | Runtime schemas | Zod configuration and liveness response; domain request schemas not yet needed |
 | Web UI | None |
-| Database/schema/migrations | None |
+| Database/schema/migrations | PostgreSQL development service defined; runtime checks pending; no application schema/migrations |
 | Queues/outbox | None |
 | Agent/model provider | None |
-| Project Docker/Compose configuration | None |
+| Project Docker/Compose configuration | One PostgreSQL service in root `compose.yaml` |
 | CI/CD/cloud deployment | None |
 | Application tests | Configuration, HTTP liveness, OpenAPI constraints, invalid responses, log privacy/correlation and provider injection |
 
@@ -74,7 +82,7 @@ human approval and idempotent fix-PR publication arrive in V8. No automatic merg
 
 | Checkpoint | Bounded addition |
 |---|---|
-| V0.e | PostgreSQL-only Compose setup and Prisma migration/query/transaction preflight |
+| V0.e | Verify local PostgreSQL, then add Prisma migration/query/transaction preflight and readiness |
 | V0.f | Minimal Next/React review shell and actual API/browser integration; shared contracts only at use |
 | V0.g | Clean-checkout Linux CI and aggregate V0 acceptance |
 

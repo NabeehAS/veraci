@@ -177,6 +177,39 @@ npm-generated lockfile excluded through `.prettierignore`. Markdown remains
 manually maintained; the frozen roadmap is unchanged. Formatting changes do not
 alter production behavior. No later-release infrastructure is installed.
 
+## PostgreSQL runtime preparation — 2026-10-19
+
+| Selection | Value | Evidence |
+|---|---|---|
+| PostgreSQL release | 18.6 | Current supported 18 minor in the official version policy |
+| Official image | `postgres:18.6-bookworm` | Docker Official Image tag and registry metadata |
+| OCI index digest | `sha256:afc7e2d441324c0388fa80c3d24f733b4194a4eb7f47dd8ee2b08eb1a24a647c` | Registry bytes verified against SHA-256; pinned in Compose |
+| Linux amd64 manifest | `sha256:9551dd5bf356409a21b31248f49b33bba9bb1877365f3a7e933aecd9af3cf52d` | Manifest/config bytes verified; PostgreSQL 18.6 and PGDATA confirmed in image metadata |
+| Volume target | `/var/lib/postgresql` | PostgreSQL 18 image's documented mount target |
+| Image `PGDATA` | `/var/lib/postgresql/18/docker` | Official image layout; actual SQL check pending |
+
+The Compose YAML was parsed and inspected for the single service, immutable image
+reference, loopback publication, SCRAM initialization, named volume and escaped
+healthcheck variables. Git ignores `.env` and permits `.env.example`. Docker,
+Podman and psql are unavailable in the preparation environment. Consequently,
+`docker compose config --quiet`, container startup, authentication, SQL rollback
+and persistence across container recreation remain pending WSL acceptance.
+No image execution or database integration result is claimed from metadata checks.
+
+Registry candidates for the subsequent Prisma checkpoint are `prisma`,
+`@prisma/client` and `@prisma/adapter-pg` at `7.10.1`, with `pg` and `@types/pg`
+at `8.23.1`. Their declared requirements cover the selected Node/TypeScript versions;
+the adapter's driver ranges cover these pg packages. They are not installed, pinned
+in the lockfile or integration-tested yet. The generic `prisma` registry tag returned
+`8.0.0-rc.23` during this check; explicit stable 7 versions preserve the accepted
+architecture and avoid accidentally mixing CLI/client majors. Reconfirm candidates
+when installing rather than relying on the generic tag.
+
+The inspected WSL V0.d output on 2026-10-19 independently confirms the existing
+289-package installation, all aggregate checks with 20 tests, exact direct pins,
+no unreviewed scripts and zero known vulnerabilities. It does not establish the
+new PostgreSQL configuration's runtime behavior.
+
 ## Components requiring preflight
 
 | Component | Required release line or constraint | First integration gate |
@@ -185,7 +218,7 @@ alter production behavior. No later-release infrastructure is installed.
 | NestJS | 12 with compatible companion packages | Production startup and real Vitest dependency injection passed |
 | Vitest | One compatible maintained line; no parallel Jest stack | 20 SWC-backed tests passed |
 | Validation/OpenAPI/Pino | Zod runtime contracts, compatible Nest integration | Configuration, response/OpenAPI agreement and request-log checks passed |
-| PostgreSQL | 18 | V0.e: maintained image tag/digest and real integration |
+| PostgreSQL | 18 | Image 18.6/digest selected; Compose runtime acceptance pending |
 | Prisma | Maintained stable 7 line | V0.e: aligned CLI/client/adapter/driver and database checks |
 | Next.js | Supported, patched 16 line | V0.f: package peers and production build/start |
 | React/React DOM/types | Compatible React 19 set | V0.f: rendering and interaction test |
@@ -210,7 +243,7 @@ infrastructure is not installed during V0 to reserve versions.
 | Dependency graph and API/compiler | Passed — Linux preflight, 2026-10-06 | Normal install/`npm ci`, typechecks, three tests, production build/start and shutdown |
 | API contract/logging | Passed — Linux preflight, 2026-10-19 | Runtime response/OpenAPI agreement; invalid settings/output rejected; request-log privacy/correlation |
 | Lint/format and aggregate API acceptance | Passed — Linux preflight, 2026-10-19 | Fresh lockfile install, lint, formatting, types, 20 tests, build and compiled-process smoke |
-| PostgreSQL/Prisma | Pending — V0.e | Generate, migrate, query and transaction rollback in an isolated real database; distinct liveness/readiness |
+| PostgreSQL/Prisma | In progress — V0.e | PostgreSQL configuration prepared; runtime checks, Prisma generation/migration/query/rollback and API readiness pending |
 | UI/browser | Pending — V0.f | Next build/start, React interaction and Linux Playwright against real API/database state |
 | Clean checkout/Linux CI | Pending — V0.g | Lockfile install, lint/typecheck/tests/build/startup from a clean checkout |
 
@@ -242,6 +275,9 @@ changes follow the [change-control process](ARCHITECTURE_INVARIANTS.md#compatibi
 - [typescript-eslint supported dependencies](https://typescript-eslint.io/users/dependency-versions/)
 - [Type-aware linting](https://typescript-eslint.io/getting-started/typed-linting/)
 - [Prettier installation and ESLint integration](https://prettier.io/docs/install)
+- [PostgreSQL supported releases](https://www.postgresql.org/support/versioning/)
+- [Official PostgreSQL image and data layout](https://hub.docker.com/_/postgres)
+- [Prisma 7 system requirements](https://www.prisma.io/docs/orm/v7/reference/system-requirements)
 - [npm dependency install-script policy](https://docs.npmjs.com/cli/v11/commands/npm-install-scripts/)
 
 - [Node 24.21.0 release](https://nodejs.org/en/blog/release/v24.21.0)

@@ -19,8 +19,8 @@
     "check": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build",
     "start:api": "npm run start --workspace=@veraci/api",
     "lint": "eslint . --max-warnings=0",
-    "format": "prettier --write \"**/*.{js,ts,json}\"",
-    "format:check": "prettier --check \"**/*.{js,ts,json}\""
+    "format": "prettier --write \"**/*.{js,ts,json,yaml,yml}\"",
+    "format:check": "prettier --check \"**/*.{js,ts,json,yaml,yml}\""
   },
   "allowScripts": {
     "@swc/core": false,
