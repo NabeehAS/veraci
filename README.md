@@ -12,27 +12,36 @@ verification policy.
 
 ## Current state
 
-V0 — Reproducible Foundation is in progress. The committed foundation contains
-root npm configuration, Git/editor rules and project documentation. Application
-packages, database integration, queues, GitHub integration and agent behavior are
-not yet implemented.
+V0 — Reproducible Foundation is in progress. The API workspace provides process
+liveness at `GET /health/live`, an ESM production build and Nest/Vitest integration
+tests. Database readiness, structured logging, validated domain APIs, the web UI,
+GitHub integration, queues and agent behavior are not implemented yet.
 
-See [project status](docs/PROJECT_STATUS.md) for verified behavior and the current
-checkpoint, and the [roadmap](docs/MASTER_ROADMAP.md) for planned releases.
+See [project status](docs/PROJECT_STATUS.md) for the current checkpoint and
+[the roadmap](docs/MASTER_ROADMAP.md) for planned releases.
 
 ## Development
 
 Use Ubuntu in WSL2, VS Code connected to WSL and Docker Desktop with Linux containers.
 Keep the repository in the Linux filesystem, such as `~/projects/veraci`, and run
-repository commands in Ubuntu.
+repository commands in Ubuntu. The toolchain is Node 24.21.0 and npm 11.19.0.
 
 ```bash
 nvm use
 npm ci
+npm run check
+npm run start:api
 ```
 
-The committed toolchain selects Node 24.21.0 and npm 11.19.0. The foundation has no
-application start, build or test command yet.
+`check` typechecks source/tests, runs Vitest and builds the API. The server binds to
+`127.0.0.1:3001`; set `PORT` to select another port. In another terminal:
+
+```bash
+curl --fail --silent --show-error http://127.0.0.1:3001/health/live
+```
+
+The response contains `status: "ok"` and process `uptimeSeconds`. This endpoint
+reports process liveness only. Stop the server with Ctrl+C.
 
 ## Documentation
 

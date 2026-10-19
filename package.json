@@ -9,5 +9,17 @@
     "node": "24.21.0",
     "npm": "11.19.0"
   },
-  "workspaces": []
+  "workspaces": [
+    "apps/api"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=@veraci/api",
+    "typecheck": "npm run typecheck --workspace=@veraci/api",
+    "test": "npm run test --workspace=@veraci/api",
+    "check": "npm run typecheck && npm test && npm run build",
+    "start:api": "npm run start --workspace=@veraci/api"
+  },
+  "allowScripts": {
+    "@swc/core": false
+  }
 }

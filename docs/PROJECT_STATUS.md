@@ -1,8 +1,8 @@
 # Project status
 
 Updated: 2026-10-06. This file records implementation progress; the
-[roadmap](MASTER_ROADMAP.md) defines planned functionality. Compatibility evidence
-and its limitations are recorded in [compatibility.md](compatibility.md).
+[roadmap](MASTER_ROADMAP.md) defines planned functionality. Exact versions and
+verification limitations are recorded in [compatibility.md](compatibility.md).
 
 ## 1. Current version
 
@@ -11,67 +11,72 @@ and its limitations are recorded in [compatibility.md](compatibility.md).
 ## 2. Current internal checkpoint
 
 **V0.d — Dependency resolution and minimal API/compiler preflight**, in progress.
-Dependency selection is under review; the API/compiler gate is not complete.
-V0.a–V0.c are complete. The committed implementation remains the V0.c foundation.
+The minimal API/compiler slice is implemented and verified in Linux. Structured
+logging, runtime API validation/OpenAPI and lint/format checks remain unfinished.
+V0.a–V0.c are complete.
 
 ## 3. Completed functionality
 
-No application functionality is implemented yet. The foundation provides:
-
-- A Linux development environment using WSL2 and Docker Desktop.
-- A private npm workspace root with exact Node/npm pins and one root lockfile.
-- Strict engine/peer settings, exact dependency saves and LF/Git/editor rules.
-- Architecture constraints, release gates and compatibility/status records.
+- Linux development foundation, exact Node/npm pins and one root lockfile.
+- One API workspace with aligned Nest packages and strict dependency resolution.
+- ESM production compilation and startup, validated port and shutdown hooks.
+- `GET /health/live` with process status and uptime, bound to loopback by default.
+- Vitest/SWC tests for real Nest injection and HTTP behavior.
 
 ## 4. Current architecture
 
-One repository with a private npm workspace root and no child workspaces.
-There are no application entrypoints, routes or UI. See
-[architecture.md](architecture.md) for the current and target designs.
+One modular NestJS API workspace, using Express and a health controller/provider.
+The root forwards build, typecheck, test and startup commands to that workspace.
+See [architecture.md](architecture.md) for current and target designs.
 
 ## 5. Database schema status
 
 No database configuration, Prisma schema, generated client or migrations.
-PostgreSQL/Prisma integration begins in V0.e.
+PostgreSQL/Prisma integration begins in V0.e. No readiness route is implemented.
 
 ## 6. Queues/processes currently present
 
-No application queues, workers, runners or persistent application processes.
-Docker Desktop and VS Code's WSL server are development tools.
+One manually started API process. No application queues, workers, runners or agents.
 
 ## 7. Tests that currently pass
 
-Application tests: **none implemented or run**.
+Recorded on 2026-10-06 with Node 24.21.0 and npm 11.19.0 on Ubuntu 24.04.3, x86_64:
 
-The recorded V0.c checks passed on 2026-10-05: Node/npm selection, lockfile
-generation, `npm ci`, the empty `npm ls --all` tree, all three npm configuration
-checks, staged whitespace validation and LF line endings. These results cover the
-foundation only; they do not establish API, database or browser compatibility.
-Evidence details and remaining gates are in [compatibility.md](compatibility.md).
+- `npm ci`: lockfile installation succeeded with strict engine/peer settings.
+- `npm ls --all`: no dependency-tree problems.
+- `npm run check`: source/test typecheck, three Vitest tests and production build passed.
+- Compiled-process smoke: HTTP 200 liveness, SIGTERM exit/port closure and invalid-port rejection.
+- `npm install-scripts ls`: no unreviewed dependency scripts.
+
+The three automated tests cover liveness through real provider injection, the
+unimplemented readiness route returning 404 and rejection of a missing provider.
+These results do not establish database, browser, runner or deployed behavior.
 
 ## 8. Known bugs
 
-No open foundation defect is recorded. Application behavior is not yet available
-for assessment.
+No open defect is recorded for the implemented API slice. Broader application
+behavior remains unimplemented.
 
 ## 9. Known technical debt
 
-No intentional code debt. The initial Docker filesystem/signal probe lacks a
-retained transcript and image digest; it is a reported check, not reproducible
-runner evidence. Unimplemented release scope remains planned work.
+Test/tooling typechecks skip declaration-file body validation because `unplugin`
+imports types for unused optional bundlers. Production compilation retains that
+validation. The rationale and limitation are in [compatibility.md](compatibility.md).
+
+The original Docker filesystem/signal probe lacks a retained transcript and image
+digest. It is not reproducible runner evidence.
 
 ## 10. Known security limitations
 
-Application authorization, secret handling and execution isolation are not yet
-implemented. Local Docker access does not provide a hostile-code sandbox. Ignore
-patterns help prevent accidental secret commits but do not replace secret scanning.
+The API exposes only local process liveness. Authorization, sensitive-data logging
+controls, domain validation and execution isolation are not implemented. The health
+response does not establish database readiness or security of repository execution.
 
 ## 11. Next bounded task
 
-Complete V0.d dependency resolution and record exact versions and results before
-adding the minimal API/compiler foundation. Verify build/startup, Nest dependency
-injection under Vitest, runtime validation/OpenAPI agreement and structured logging.
-PostgreSQL remains V0.e; the web package remains V0.f.
+Complete the next V0.d API contract slice: structured Pino logging, runtime-validated
+input/configuration and matching OpenAPI output. Add lint/format checks before V0.d
+completion. PostgreSQL remains V0.e; the web package remains V0.f.
 
 | Checkpoint | Scope | Status |
 |---|---|---|
@@ -85,23 +90,30 @@ PostgreSQL remains V0.e; the web package remains V0.f.
 
 ## 12. Exact verification commands
 
-Run from the repository root in Ubuntu/WSL to verify the committed foundation:
+From the repository root in Ubuntu/WSL:
 
 ```bash
 nvm use
-node --version
-npm --version
 npm ci
 npm ls --all
-npm config get engine-strict
-npm config get strict-peer-deps
-npm config get save-exact
+npm install-scripts ls
+npm run check
+npm audit
 git diff --check
 git diff --cached --check
-git status --short --branch
-git ls-files --eol
 ```
 
-Expected: Node v24.21.0, npm 11.19.0, an empty root dependency tree and `true` for
-all three npm settings. Diff checks should report no whitespace errors; tracked
-text should use LF. Build/test commands will be added with the application packages.
+Start the compiled API:
+
+```bash
+npm run start:api
+```
+
+In another Ubuntu terminal:
+
+```bash
+curl --fail --silent --show-error http://127.0.0.1:3001/health/live
+```
+
+Expected: HTTP success with `status: "ok"` and positive `uptimeSeconds`. Stop the
+server with Ctrl+C. The default port is 3001; `PORT` accepts integers from 1 to 65535.
