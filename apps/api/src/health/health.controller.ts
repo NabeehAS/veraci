@@ -1,5 +1,9 @@
 import { Controller, Get, InternalServerErrorException } from '@nestjs/common';
-import { ApiInternalServerErrorResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiOperation,
+} from '@nestjs/swagger';
 import { livenessSchema } from './health.schema.js';
 import { HealthService } from './health.service.js';
 
@@ -8,7 +12,10 @@ export class HealthController {
   constructor(private readonly health: HealthService) {}
 
   @Get('live')
-  @ApiOperation({ summary: 'Process liveness', description: 'Does not check external dependencies.' })
+  @ApiOperation({
+    summary: 'Process liveness',
+    description: 'Does not check external dependencies.',
+  })
   @ApiOkResponse({
     description: 'Process is responding.',
     standardSchema: livenessSchema,

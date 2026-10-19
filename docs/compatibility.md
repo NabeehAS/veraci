@@ -1,6 +1,6 @@
 # Compatibility and version record
 
-Updated: 2026-10-07. Exact versions are selected through compatibility preflight
+Updated: 2026-10-19. Exact versions are selected through compatibility preflight
 within the release lines defined by the [invariants](ARCHITECTURE_INVARIANTS.md).
 An installed package is not considered integrated until its required checks pass.
 
@@ -138,7 +138,44 @@ for runtime behavior. Fresh installation and tests pass with both this script an
 SWC's fallback installer disabled. `npm install-scripts ls` reports no unreviewed
 scripts. No blanket install-script approval or dependency conflict override was used.
 
-Lint/format checks remain within V0.d. No later-release infrastructure is installed.
+## Lint/format and V0.d acceptance — 2026-10-19
+
+Test environment: Ubuntu 24.04.3, Linux x86_64, Node 24.21.0 and npm 11.19.0.
+These working-tree results extend the configuration/logging/contract checkpoint.
+Its WSL checks were reported successful on this date; that report does not provide
+a complete retained automated transcript.
+
+| Added root development dependencies | Version |
+|---|---|
+| `eslint` | 10.13.0 |
+| `@eslint/js` | 10.0.1 |
+| `typescript-eslint` | 8.72.0 |
+| `eslint-config-prettier` | 10.1.8 |
+| `prettier` | 3.9.10 |
+
+Official support documentation and registry peers cover ESLint 10 and TypeScript
+6.0.3. The parser fails on unsupported TypeScript versions rather than suppressing
+its warning. Normal strict installation and fresh `npm ci` succeeded without
+upgrading existing application dependencies. `npm ls --all` reported no problems;
+`npm install-scripts ls` reported no unreviewed scripts.
+
+`npm run check` passed ESLint with zero warnings, formatting, typechecking, 20 tests
+and production compilation. A negative in-memory lint probe rejected an unhandled
+Promise; generated build output was excluded. A compiled-process smoke passed
+liveness, OpenAPI, log correlation, SIGTERM/port closure and invalid configuration.
+`npm audit` reported zero known vulnerabilities on this date.
+
+ESLint uses one root flat config and the existing `apps/api/tsconfig.test.json`,
+which includes source, tests and Vitest configuration. Production compilation keeps
+its existing compiler settings. The typed rules exposed unvalidated JSON access in
+HTTP tests; those tests now decode liveness/log records or assert against `unknown`
+values. No unsafe-access rules were disabled to pass the checks.
+
+Prettier options live in root package metadata. It checks JavaScript, TypeScript
+and JSON, respects generated-output exclusions in `.gitignore`, and leaves the
+npm-generated lockfile excluded through `.prettierignore`. Markdown remains
+manually maintained; the frozen roadmap is unchanged. Formatting changes do not
+alter production behavior. No later-release infrastructure is installed.
 
 ## Components requiring preflight
 
@@ -171,7 +208,8 @@ infrastructure is not installed during V0 to reserve versions.
 | Root lockfile and installation | Passed — Linux preflight, 2026-10-06 | `npm ci` installs the locked API workspace graph; no dependency-tree problems |
 | Git/editor foundation | Passed — recorded output | Staged whitespace check; LF in index and working tree for all 16 foundation files |
 | Dependency graph and API/compiler | Passed — Linux preflight, 2026-10-06 | Normal install/`npm ci`, typechecks, three tests, production build/start and shutdown |
-| API contract/logging | Passed — Linux preflight, 2026-10-07 | Runtime response/OpenAPI agreement; invalid settings/output rejected; request-log privacy/correlation |
+| API contract/logging | Passed — Linux preflight, 2026-10-19 | Runtime response/OpenAPI agreement; invalid settings/output rejected; request-log privacy/correlation |
+| Lint/format and aggregate API acceptance | Passed — Linux preflight, 2026-10-19 | Fresh lockfile install, lint, formatting, types, 20 tests, build and compiled-process smoke |
 | PostgreSQL/Prisma | Pending — V0.e | Generate, migrate, query and transaction rollback in an isolated real database; distinct liveness/readiness |
 | UI/browser | Pending — V0.f | Next build/start, React interaction and Linux Playwright against real API/database state |
 | Clean checkout/Linux CI | Pending — V0.g | Lockfile install, lint/typecheck/tests/build/startup from a clean checkout |
@@ -201,6 +239,9 @@ changes follow the [change-control process](ARCHITECTURE_INVARIANTS.md#compatibi
 - [Nest Pino compatibility and setup](https://github.com/iamolegga/nestjs-pino)
 - [Pino HTTP request serializers and IDs](https://github.com/pinojs/pino-http)
 - [TypeScript declaration-checking trade-off](https://www.typescriptlang.org/tsconfig/skipLibCheck.html)
+- [typescript-eslint supported dependencies](https://typescript-eslint.io/users/dependency-versions/)
+- [Type-aware linting](https://typescript-eslint.io/getting-started/typed-linting/)
+- [Prettier installation and ESLint integration](https://prettier.io/docs/install)
 - [npm dependency install-script policy](https://docs.npmjs.com/cli/v11/commands/npm-install-scripts/)
 
 - [Node 24.21.0 release](https://nodejs.org/en/blog/release/v24.21.0)

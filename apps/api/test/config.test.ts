@@ -7,17 +7,23 @@ describe('API configuration', () => {
   });
 
   it('accepts explicit settings without retaining unrelated environment values', () => {
-    expect(readConfig({ PORT: '4001', LOG_LEVEL: 'warn', SECRET: 'private-value' }))
-      .toEqual({ port: 4001, logLevel: 'warn' });
+    expect(
+      readConfig({ PORT: '4001', LOG_LEVEL: 'warn', SECRET: 'private-value' }),
+    ).toEqual({ port: 4001, logLevel: 'warn' });
   });
 
-  it.each(['', '0', '-1', '65536', '3001.5', '0xBB9', '3e3', 'invalid-secret'])
-    ('rejects invalid port %j without echoing its value', (port) => {
-      expect(() => readConfig({ PORT: port })).toThrow('Invalid configuration: PORT.');
-    });
+  it.each(['', '0', '-1', '65536', '3001.5', '0xBB9', '3e3', 'invalid-secret'])(
+    'rejects invalid port %j without echoing its value',
+    (port) => {
+      expect(() => readConfig({ PORT: port })).toThrow(
+        'Invalid configuration: PORT.',
+      );
+    },
+  );
 
   it('rejects unknown logging levels without exposing their value', () => {
-    expect(() => readConfig({ LOG_LEVEL: 'private-value' }))
-      .toThrow('Invalid configuration: LOG_LEVEL.');
+    expect(() => readConfig({ LOG_LEVEL: 'private-value' })).toThrow(
+      'Invalid configuration: LOG_LEVEL.',
+    );
   });
 });

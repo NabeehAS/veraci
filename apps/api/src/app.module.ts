@@ -14,7 +14,9 @@ export class AppModule {
   static register(config: ApiConfig): DynamicModule {
     return {
       module: AppModule,
-      imports: [LoggerModule.forRoot({ pinoHttp: httpLoggerOptions(config.logLevel) })],
+      imports: [
+        LoggerModule.forRoot({ pinoHttp: httpLoggerOptions(config.logLevel) }),
+      ],
     };
   }
 }

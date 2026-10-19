@@ -1,6 +1,6 @@
 # Project status
 
-Updated: 2026-10-07. This file records implementation progress; the
+Updated: 2026-10-19. This file records implementation progress; the
 [roadmap](MASTER_ROADMAP.md) defines planned functionality. Exact versions and
 verification limitations are recorded in [compatibility.md](compatibility.md).
 
@@ -10,10 +10,9 @@ verification limitations are recorded in [compatibility.md](compatibility.md).
 
 ## 2. Current internal checkpoint
 
-**V0.d — Dependency resolution and minimal API/compiler preflight**, in progress.
-The API/compiler and configuration/logging/contract slices are implemented and
-verified in Linux. Lint/format checks remain unfinished.
-V0.a–V0.c are complete.
+**V0.d — Dependency resolution and API/compiler preflight**, complete in Linux.
+The API, configuration, logging, runtime contract, lint and formatting gates pass.
+V0.a–V0.d are complete. V0.e has not started.
 
 ## 3. Completed functionality
 
@@ -25,12 +24,15 @@ V0.a–V0.c are complete.
 - Validated port/log-level settings and generic startup errors without supplied values.
 - Runtime-validated liveness responses and generated `/openapi.json` from the same schema.
 - Pino JSON logs with server-generated request IDs and allowlisted request/response metadata.
+- One root ESLint flat config with type-aware API/test checks and zero-warning enforcement.
+- Pinned Prettier and an aggregate check for lint, formatting, types, tests and build.
 
 ## 4. Current architecture
 
 One modular NestJS API workspace, using Express, a health controller/provider,
 Zod contracts and Pino logging. Configuration is validated before application startup.
-The root forwards build, typecheck, test and startup commands to that workspace.
+The root forwards build, typecheck, test and startup commands to that workspace
+and owns the lint/format tooling.
 See [architecture.md](architecture.md) for current and target designs.
 
 ## 5. Database schema status
@@ -44,11 +46,14 @@ One manually started API process. No application queues, workers, runners or age
 
 ## 7. Tests that currently pass
 
-Recorded on 2026-10-07 with Node 24.21.0 and npm 11.19.0 on Ubuntu 24.04.3, x86_64:
+Recorded on 2026-10-19 with Node 24.21.0 and npm 11.19.0 on Ubuntu 24.04.3, x86_64:
 
 - `npm ci`: lockfile installation succeeded with strict engine/peer settings.
 - `npm ls --all`: no dependency-tree problems.
-- `npm run check`: source/test typecheck, 20 Vitest tests and production build passed.
+- `npm run check`: ESLint with zero warnings, Prettier, source/test typecheck,
+  20 Vitest tests and production build passed.
+- An in-memory negative probe confirmed that lint rejects an unhandled Promise
+  and excludes generated build output.
 - Compiled-process smoke: liveness, OpenAPI, correlated JSON logs, SIGTERM exit/port closure,
   and invalid port/log-level rejection without exposing supplied values.
 - `npm install-scripts ls`: no unreviewed dependency scripts.
@@ -57,7 +62,8 @@ The tests cover configuration defaults and invalid settings; real HTTP/provider
 injection; absent readiness; OpenAPI response constraints; invalid provider responses;
 unique server-generated request IDs; and omission of sensitive header/query/body/path
 values from request logs. These results do not establish database, browser, runner or
-deployed behavior.
+deployed behavior. The WSL configuration/logging checks were reported successful
+on 2026-10-19; the complete automated transcript was not retained.
 
 ## 8. Known bugs
 
@@ -83,15 +89,17 @@ Health does not establish database readiness or security of repository execution
 
 ## 11. Next bounded task
 
-Add focused ESLint and Prettier checks, verify the existing API under those checks,
-and complete V0.d acceptance. PostgreSQL remains V0.e; the web package remains V0.f.
+V0.e — PostgreSQL/Prisma integration preflight: resolve a supported PostgreSQL 18
+image and compatible Prisma 7 CLI/client/adapter/driver pins; add PostgreSQL-only
+Compose configuration, a reviewed migration and real query/rollback checks, then
+implement distinct database readiness. The web package remains V0.f.
 
 | Checkpoint | Scope | Status |
 |---|---|---|
 | V0.a | Host and tooling inventory | Complete |
 | V0.b | Linux development environment | Complete |
 | V0.c | Minimal workspace and documentation | Complete |
-| V0.d | Dependency resolution and API/compiler preflight | In progress |
+| V0.d | Dependency resolution and API/compiler preflight | Complete — Linux preflight |
 | V0.e | PostgreSQL/Prisma integration preflight | Planned |
 | V0.f | Web/browser preflight | Planned |
 | V0.g | Clean-checkout Linux CI and V0 acceptance | Planned |
@@ -110,6 +118,11 @@ npm audit
 git diff --check
 git diff --cached --check
 ```
+
+`npm run check` leaves source and configuration unchanged; the build writes ignored
+`apps/api/dist` output. `npm run format` applies formatting to JavaScript, TypeScript
+and JSON; the generated lockfile is excluded. Markdown remains manually maintained.
+Review formatting changes before committing.
 
 Start the compiled API:
 

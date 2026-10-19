@@ -34,9 +34,11 @@ npm run check
 npm run start:api
 ```
 
-`check` typechecks source/tests, runs Vitest and builds the API. The server binds to
-`127.0.0.1:3001`; `PORT` accepts a decimal integer from 1 to 65535. `LOG_LEVEL`
-defaults to `info` and accepts Pino levels or `silent`. Invalid settings stop startup.
+`check` runs ESLint, Prettier checks, source/test typechecking, Vitest and the API
+build. `npm run format` formats JavaScript, TypeScript and JSON files; the generated
+lockfile is excluded. The server binds to `127.0.0.1:3001`; `PORT` accepts a decimal
+integer from 1 to 65535. `LOG_LEVEL` defaults to `info` and accepts Pino levels or
+`silent`. Invalid settings stop startup.
 In another terminal:
 
 ```bash

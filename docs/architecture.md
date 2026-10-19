@@ -1,6 +1,6 @@
 # Architecture
 
-Updated: 2026-10-07. Current implementation and target design are described separately.
+Updated: 2026-10-19. Current implementation and target design are described separately.
 The [invariants](ARCHITECTURE_INVARIANTS.md) and [master roadmap](MASTER_ROADMAP.md)
 constrain implementation; [project status](PROJECT_STATUS.md) records current progress.
 
@@ -13,6 +13,12 @@ returns process liveness and uptime; it does not check external dependencies.
 TypeScript emits Node ESM into `apps/api/dist` using NodeNext resolution and `.js`
 relative imports. Vitest uses SWC to preserve Nest's decorator metadata. The HTTP
 integration tests exercise real provider injection and reject a missing provider.
+
+Root-owned ESLint uses the existing API test compiler configuration for type-aware
+source/test/tooling checks. Prettier formats JavaScript, TypeScript and JSON, while
+npm owns the generated lockfile format. The aggregate `check` command runs lint,
+format checking, typechecking, tests and build. Source and configuration remain
+unchanged; compilation writes ignored `apps/api/dist` output.
 
 The entrypoint validates `PORT` and `LOG_LEVEL` with Zod before creating the app,
 binds to loopback (default port 3001) and enables Nest shutdown hooks. The root
@@ -68,7 +74,6 @@ human approval and idempotent fix-PR publication arrive in V8. No automatic merg
 
 | Checkpoint | Bounded addition |
 |---|---|
-| V0.d | Add lint/format checks and complete the API foundation acceptance review |
 | V0.e | PostgreSQL-only Compose setup and Prisma migration/query/transaction preflight |
 | V0.f | Minimal Next/React review shell and actual API/browser integration; shared contracts only at use |
 | V0.g | Clean-checkout Linux CI and aggregate V0 acceptance |

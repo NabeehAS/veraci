@@ -7,7 +7,9 @@ export function configureApp(app: INestApplication) {
 
   const definition = new DocumentBuilder()
     .setTitle('VeraCI API')
-    .setDescription('Local foundation API. Liveness does not imply dependency readiness.')
+    .setDescription(
+      'Local foundation API. Liveness does not imply dependency readiness.',
+    )
     .setVersion('0.0.0')
     .build();
 

@@ -14,7 +14,10 @@ export function httpLoggerOptions(level: ApiConfig['logLevel']): Options {
     wrapSerializers: false,
     // Allowlist metadata; URLs, headers and bodies can contain credentials.
     serializers: {
-      req: (request: IncomingMessage) => ({ id: request.id, method: request.method }),
+      req: (request: IncomingMessage) => ({
+        id: request.id,
+        method: request.method,
+      }),
       res: (response: ServerResponse) => ({ statusCode: response.statusCode }),
     },
     customLogLevel: (_request, response, error) => {
